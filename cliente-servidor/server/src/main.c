@@ -17,7 +17,7 @@ char * revert(char * message){
 }
 
 int main(int argc, char *argv[]){
-    char * IP;
+  char * IP;
   int PORT;
 
   int L_FLAG = 0;
@@ -72,7 +72,6 @@ int main(int argc, char *argv[]){
     }
   }
 
-  printf("port: %d\n ip: %s\n flag: %d\n", PORT, IP, L_FLAG);
 
   
 
