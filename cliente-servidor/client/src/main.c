@@ -33,6 +33,10 @@ void print_cards(char * message) {
     for (int j = 0; j < words_length[i]; j++) {
       printf("%c", word[j]);
     }
+    int restantes = 20 - words_position[i] - words_length[i];
+    for (int j = 0; j < restantes; j++) {
+      printf("-");
+    }
     printf("     ");
     //card2
     for (int j = 0; j < words_position[i + 10]; j++) {
@@ -41,6 +45,10 @@ void print_cards(char * message) {
     word = words[i + 10];
     for (int j = 0; j < words_length[i + 10]; j++) {
       printf("%c", word[j]);
+    }
+    restantes = 20 - words_position[i + 10] - words_length[i + 10];
+    for (int j = 0; j < restantes; j++) {
+      printf("-");
     }
     printf("\n");
     for (int j = 0; j < 20; j++) {
@@ -136,46 +144,24 @@ int main (int argc, char *argv[]){
   
 
   // Se prepara el socket
-  int server_socket = prepare_socket(IP, PORT);
-  char * cards_message;
-
+  
+  
   // Se inicializa un loop para recibir todo tipo de paquetes y tomar una acción al respecto
-  while (1){
-    break;
-    int msg_code = client_receive_id(server_socket);
+  while(1) {
+    printf("1) Comenzar juego\n");
+    printf("2) Abandonar\n");
+    printf("Ingerese numero de la opcion: ");
+    char * response = get_input();
+    if (response[0] == '1') {
+    while (1) {
+    //COMIENZO EL JUEGO
+    int server_socket = prepare_socket(IP, PORT);
+    char * cards_message;
+    int id;
+    char * empty_message = "";
+    client_send_message(server_socket, 1, empty_message);
     
-    if (msg_code == 1) { //Recibimos un mensaje del servidor
-      char * message = client_receive_payload(server_socket);
-      printf("El servidor dice: %s\n", message);
-      free(message);
-
-      printf("¿Qué desea hacer?\n   1)Enviar mensaje al servidor\n   2)Enviar mensaje al otro cliente\n");
-      int option = getchar() - '0';
-      getchar(); //Para capturar el "enter" que queda en el buffer de entrada stdin
-      
-      printf("Ingrese su mensaje: ");
-      char * response = get_input();
-     
-
-
-      client_send_message(server_socket, option, response);
-    }
-
-    if (msg_code == 2) { //Recibimos un mensaje que proviene del otro cliente
-      char * message = client_receive_payload(server_socket);
-      printf("El otro cliente dice: %s\n", message);
-      free(message);
-
-      printf("¿Qué desea hacer?\n   1)Enviar mensaje al servidor\n   2)Enviar mensaje al otro cliente\n");
-      int option = getchar() - '0';
-      getchar(); //Para capturar el "enter" que queda en el buffer de entrada stdin
-      
-      printf("Ingrese su mensaje: ");
-      char * response = get_input();
-
-      client_send_message(server_socket, option, response);
-    }
-
+    int msg_code = client_receive_id(server_socket);
     
     if (msg_code == 2) {
       //CONNECTION ESTABLISHED
@@ -184,15 +170,14 @@ int main (int argc, char *argv[]){
     }
     if (msg_code == 3) {
       //ASK NICKNAME
-      printf("Ingrese su nickname:\n");
+      printf("Ingrese su nickname o ingrese:\n");
       char * response = get_input();
+      client_send_message(server_socket, 4, response);
+      printf("Se ha enviado el nickname al servidor\n");
+      printf("Esperando al oponente\n");
       
     }
-    if (msg_code == 4) {
-      //RETURN NICKNAME
-
-
-    }
+   
     if (msg_code == 5) {
       //OPPONENT FOUND
       
@@ -222,14 +207,46 @@ int main (int argc, char *argv[]){
     
 
     }
-    if (msg_code == 10) {
-      //SEND WORD
-    }
+    
+
     if (msg_code == 11) {
       //RESPONSE WORD
+      char * message = client_receive_payload(server_socket);
+      int correcto = message[0];
+      int intentos_restantes = message[1];
+      if (correcto == 0) {
+        //incorrecta
+        printf("respuesta incorrecta\n");
+        if (intentos_restantes == 0) {
+          printf("No te quedan intentos\n");
+        } else {
+          printf("Te quedan %c intentos\n", intentos_restantes);
+          printf("ingrese palabra: ");
+          char * response = get_input();
+          client_send_message(server_socket, 10, response);
+          printf("\n");
+        }
+
+      } else {
+        //correcta
+        printf("Respuesta correcta\n");
+      }
+
     }
     if (msg_code == 12) {
       //ROUND WINNER/LOOSER
+      char * message = client_receive_payload(server_socket);
+      int winner_id = message[0];
+      
+      if (winner_id == 0) {
+        printf("Empate\n");
+      } else {
+        if (winner_id == id) {
+          printf("Ganaste\n");
+        } else {
+          printf("Perdiste\n");
+        }
+      }
     }
     if (msg_code == 13) {
       //END GAME
@@ -240,9 +257,7 @@ int main (int argc, char *argv[]){
     if (msg_code == 15) {
       //ASK NEW GAME
     }
-    if (msg_code == 16) {
-      //ANSWER NEW GAME
-    }
+    
     if (msg_code == 17) {
       //DISCONNECT
     }
@@ -254,9 +269,19 @@ int main (int argc, char *argv[]){
     printf("------------------\n");
   }
 
+    } else if (response[0] == '2') {
+      printf("Chao\n");
+      break;
+    } else {
+      printf("No existe esa opcion\n");
+    }
+
+  }
+  
+
   // Se cierra el socket
+  
   close(server_socket);
-  free(IP);
 
   return 0;
 }
