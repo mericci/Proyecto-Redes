@@ -4,16 +4,33 @@
 #include "comunication.h"
 #include "conection.h"
 
-char * revert(char * message){
-  int len = strlen(message) + 1;
-  char * response = malloc(len);
-  
-  for (int i = 0; i < len-1; i++)
-  {
-    response[i] = message[len-2-i];
-  }
-  response[len-1] = '\0';
-  return response;
+void dobble(int sockets_array[2])
+{
+  char * juego1 =  "/$$$$$$$    /$$$$$$  /$$$$$$$  /$$$$$$$  /$$       /$$$$$$$$\n";
+  char * juego2 =  "| $$__  $$ /$$__  $$| $$__  $$| $$__  $$| $$      | $$_____/\n";
+  char * juego3 =  "| $$  | $$| $$  | $$| $$  | $$| $$  | $$| $$      | $$\n";
+  char * juego4 =  "| $$  | $$| $$  | $$| $$$$$$$ | $$$$$$$ | $$      | $$$$$\n";
+  char * juego5 =  "| $$  | $$| $$  | $$| $$__  $$| $$__  $$| $$      | $$__/\n";
+  char * juego6 =  "| $$  | $$| $$  | $$| $$  | $$| $$  | $$| $$      | $$\n";
+  char * juego7 =  "| $$$$$$$/|  $$$$$$/| $$$$$$$/| $$$$$$$/| $$$$$$$$| $$$$$$$$\n";
+  char * juego8 =  "|_______/ |_______/ |_______/ |_______/ |________/|________/\n";
+
+  server_send_message(sockets_array[0], 7, juego1);
+  server_send_message(sockets_array[1], 7, juego1);
+  server_send_message(sockets_array[0], 7, juego2);
+  server_send_message(sockets_array[1], 7, juego2);
+  server_send_message(sockets_array[0], 7, juego3);
+  server_send_message(sockets_array[1], 7, juego3);
+  server_send_message(sockets_array[0], 7, juego4);
+  server_send_message(sockets_array[1], 7, juego4);
+  server_send_message(sockets_array[0], 7, juego5);
+  server_send_message(sockets_array[1], 7, juego5);
+  server_send_message(sockets_array[0], 7, juego6);
+  server_send_message(sockets_array[1], 7, juego6);
+  server_send_message(sockets_array[0], 7, juego7);
+  server_send_message(sockets_array[1], 7, juego7);
+  server_send_message(sockets_array[0], 7, juego8);
+  server_send_message(sockets_array[1], 7, juego8);
 }
 
 int main(int argc, char *argv[]){
@@ -23,41 +40,56 @@ int main(int argc, char *argv[]){
 
   // Se crea el servidor y se obtienen los sockets de ambos clientes.
   PlayersInfo * players_info = prepare_sockets_and_get_clients(IP, PORT);
-
-  // Le enviamos al primer cliente un mensaje de bienvenida
-  char * welcome = "Bienvenido Cliente 1!!";
-  server_send_message(players_info->socket_c1, 1, welcome);
   
-  // Guardaremos los sockets en un arreglo e iremos alternando a quién escuchar.
   int sockets_array[2] = {players_info->socket_c1, players_info->socket_c2};
-  int my_attention = 0;
-  while (1)
-  {
-    // Se obtiene el paquete del cliente 1
-    int msg_code = server_receive_id(sockets_array[my_attention]);
+  // Le enviamos al primer cliente un mensaje de bienvenida
+  char * nickname = "Ingrese su Nickname: ";
+  // preguntamos el nickname al cliente 1
+  server_send_message(sockets_array[0], 3, nickname);
+  // Esperamos respuesta del cliente 1
+  int nickname1 = server_receive_id(sockets_array[0]);
+  char * NICK1 = server_receive_payload(sockets_array[0]);
+  // preguntamos el nickname al cliente 2
 
-    if (msg_code == 1) //El cliente me envió un mensaje a mi (servidor)
-    {
-      char * client_message = server_receive_payload(sockets_array[my_attention]);
-      printf("El cliente %d dice: %s\n", my_attention+1, client_message);
-      
-      // Le enviaremos el mismo mensaje invertido jeje
-      char * response = revert(client_message);
-      
-      // Le enviamos la respuesta
-      server_send_message(sockets_array[my_attention], 1, response);
-    }
-    else if (msg_code == 2){ //El cliente le envía un mensaje al otro cliente
-      char * client_message = server_receive_payload(sockets_array[my_attention]);
-      printf("Servidor traspasando desde %d a %d el mensaje: %s\n", my_attention+1, ((my_attention+1)%2)+1, client_message);
-      
-      // Mi atención cambia al otro socket
-      my_attention = (my_attention + 1) % 2;
-      
-      server_send_message(sockets_array[my_attention], 2, client_message); 
-    }
-    printf("------------------\n");
+  server_send_message(sockets_array[1], 3, nickname);
+  // Esperamos respuesta del cliente 1
+  int nickname2 = server_receive_id(sockets_array[1]);
+  char * NICK2 = server_receive_payload(sockets_array[1]);
+  
+  //enviamos los ID
+  server_send_message(sockets_array[0], 6, "Tu ID es: 1\n");
+  server_send_message(sockets_array[1], 6, "Tu ID es: 2\n");
+
+
+  while(1)
+  {
+    //TITULO
+    dobble(sockets_array);
+    //AGREGAR marcador actual
+    
+
+    
+    //server_send_message(sockets_array[0], 9, tablero);
+    //server_send_message(sockets_array[1], 9, tablero);
+
+
+
+    
+    
+
+
+
+
+    
+    
+    
+
+
   }
+
+  
+  printf("------------------\n");
+  
 
   return 0;
 }
