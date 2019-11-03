@@ -37,10 +37,11 @@ int main(int argc, char *argv[]){
   // Se define una IP y un puerto
   char * IP = "0.0.0.0";
   int PORT = 8080;
-
-  // Se crea el servidor y se obtienen los sockets de ambos clientes.
   PlayersInfo * players_info = prepare_sockets_and_get_clients(IP, PORT);
-  
+  int game_start = 1;
+  int score_player1 = 0;
+  int score_player2 = 0;
+  int round = 0;
   int sockets_array[2] = {players_info->socket_c1, players_info->socket_c2};
   // Le enviamos al primer cliente un mensaje de bienvenida
   char * nickname = "Ingrese su Nickname: ";
@@ -56,40 +57,42 @@ int main(int argc, char *argv[]){
   int nickname2 = server_receive_id(sockets_array[1]);
   char * NICK2 = server_receive_payload(sockets_array[1]);
   
-  //enviamos los ID
-  server_send_message(sockets_array[0], 6, "Tu ID es: 1\n");
-  server_send_message(sockets_array[1], 6, "Tu ID es: 2\n");
+  
 
 
   while(1)
   {
     //TITULO
     dobble(sockets_array);
+
+    server_send_message(sockets_array[0], 6, "Tu ID es: 1\n");
+    server_send_message(sockets_array[1], 6, "Tu ID es: 2\n");
+
     //AGREGAR marcador actual
-    
+    server_send_message(sockets_array[0], 8, "Puntajes: \n");
+    server_send_message(sockets_array[1], 8, "Puntajes: \n");
+    server_send_message(sockets_array[0], 8, NICK1);
+    server_send_message(sockets_array[1], 8, NICK1);
+    server_send_message(sockets_array[0], 8, ": \n ");
+    server_send_message(sockets_array[1], 8, ": \n ");
+    server_send_message(sockets_array[0], 8, score_player1);
+    server_send_message(sockets_array[1], 8, score_player1);
+    server_send_message(sockets_array[0], 8, NICK2);
+    server_send_message(sockets_array[1], 8, NICK2);
+    server_send_message(sockets_array[0], 8, ": \n");
+    server_send_message(sockets_array[1], 8, ": \n");
+    server_send_message(sockets_array[0], 8, score_player2);
+    server_send_message(sockets_array[1], 8, score_player2);
 
     
     //server_send_message(sockets_array[0], 9, tablero);
     //server_send_message(sockets_array[1], 9, tablero);
 
-
-
-    
-    
-
-
-
-
-    
-    
-    
-
-
-  }
-
+  
+  
   
   printf("------------------\n");
-  
+  }
 
   return 0;
 }

@@ -33,8 +33,48 @@ int main (int argc, char *argv[]){
     int msg_code = client_receive_id(server_socket);
     if(msg_code == 3){
       char * message = client_receive_payload(server_socket);
+      printf("%s", message);
+      free(message);
+      char * response = get_input();
+      client_send_message(server_socket, 4, response);
+    }
+    if(msg_code == 6)
+    {
+      char * message = client_receive_payload(server_socket);
+      printf("%s\n", message);
+      free(message);
+    }
+    else if(msg_code == 7)
+    {
+        char * message = client_receive_payload(server_socket);
+        printf("%s", message);
+        free(message);
+    }
+    else if(msg_code == 8)
+    {
+      char * message = client_receive_payload(server_socket);
+      printf("%s", message);
+      free(message);
+    }
+
+
+
+
+  // Se inicializa un loop para recibir todo tipo de paquetes y tomar una acción al respecto
+  /*
+  while (1){
+    int msg_code = client_receive_id(server_socket);
+
+    if (msg_code == 1) { //Recibimos un mensaje del servidor
+      char * message = client_receive_payload(server_socket);
     	printf("%s", message);
       free(message);
+
+      printf("¿Qué desea hacer?\n   1)Enviar mensaje al servidor\n   2)Enviar mensaje al otro cliente\n");
+      int option = getchar() - '0';
+      getchar(); //Para capturar el "enter" que queda en el buffer de entrada stdin
+
+      printf("Ingrese su mensaje: ");
       char * response = get_input();
       client_send_message(server_socket, 4, response);
     }
@@ -61,7 +101,18 @@ int main (int argc, char *argv[]){
   
 
   
+
+      printf("¿Qué desea hacer?\n   1)Enviar mensaje al servidor\n   2)Enviar mensaje al otro cliente\n");
+      int option = getchar() - '0';
+      getchar(); //Para capturar el "enter" que queda en el buffer de entrada stdin
+
+      printf("Ingrese su mensaje: ");
+      char * response = get_input();
+
+      client_send_message(server_socket, option, response);
+    }*/
     printf("------------------\n");
+  }
   //}
 
   // Se cierra el socket
