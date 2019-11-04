@@ -68,7 +68,7 @@ int main(int argc, char *argv[]){
     server_send_message(sockets_array[0], 6, "Tu ID es: 1\n");
     server_send_message(sockets_array[1], 6, "Tu ID es: 2\n");
 
-    //AGREGAR marcador actual
+    //marcador actual
     server_send_message(sockets_array[0], 8, "Puntajes: \n");
     server_send_message(sockets_array[1], 8, "Puntajes: \n");
     server_send_message(sockets_array[0], 8, NICK1);
