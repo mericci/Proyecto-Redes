@@ -66,6 +66,17 @@ void print_cards(char * message) {
 
 }
 
+int negative_transformation(int n) {
+  if (n >= 0) {
+    return n;
+  }
+  else {
+    int dif = 128 - (n * (-1));
+    int m = 128 + dif;
+    return m; 
+  }
+}
+
 
 
 char * get_input(){
@@ -153,7 +164,7 @@ int main (int argc, char *argv[]){
       int id;
       int game_number;
       char * nombre = malloc(40);
-      char * rival = malloc(40);
+      char * rival;
       char * empty_message = "";
       client_send_message(server_socket, 1, empty_message);
       while(1) //while(play)
@@ -185,7 +196,12 @@ int main (int argc, char *argv[]){
           //OPPONENT FOUND
           char * message = client_receive_payload(server_socket);
           printf("%s se ha unido a la partida\n", message);
-          rival = message;
+          int a = strlen(message);
+
+          rival = malloc(sizeof(char) * strlen(message)); 
+          for (int i = 0; i < strlen(message); i++) {
+            rival[i] = message[i];
+          }
           free(message);
         }
 
@@ -193,7 +209,8 @@ int main (int argc, char *argv[]){
           //SEND ID'S
           char * message = client_receive_payload(server_socket);
           id = message[0];
-          printf("Tu ID es: %d", id);
+          
+          printf("Tu ID es: %d\n", id);
           free(message);
           
         }
@@ -345,7 +362,7 @@ int main (int argc, char *argv[]){
       
         //printf("------------------\n");
       }
-       
+      free(rival);
     
     }
     else if (response[0] == '2') {
@@ -356,6 +373,7 @@ int main (int argc, char *argv[]){
       printf("No existe esa opcion\n");
     }
   }
+  
 
   return 0;
 }
