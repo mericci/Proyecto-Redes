@@ -90,7 +90,8 @@ int main(int argc, char *argv[]){
   char * NICK1;
   char * NICK2;
   // Se obtiene el socket del primer cliente
-  PlayersInfo * players_info_1= prepare_socket_and_get_client(IP, PORT);
+  int server_socket = prepare_socket(IP, PORT);
+  PlayersInfo * players_info_1= get_client(server_socket);
   printf("Se obtuvo la info del primer cliente\n");
   int msg_code1 = server_receive_id(players_info_1->socket_c1);
   server_receive_payload(players_info_1->socket_c1);
@@ -114,17 +115,17 @@ int main(int argc, char *argv[]){
   
 
   //Se obtiene el socket del segundo cliente
-  PlayersInfo * players_info_2 = prepare_socket_and_get_client(IP, PORT);
+  PlayersInfo * players_info_2 = get_client(server_socket);
   printf("Se obtuvo la info del segundo cliente\n");
   int msg_code2 = server_receive_id(players_info_2->socket_c1);
   server_receive_payload(players_info_2->socket_c1);
   if (msg_code2 == 1) {
     server_send_message(players_info_2->socket_c1, 2, empty_message);
-  }
+  server_send_message(players_info_2->socket_c1, 3, empty_message);  }
   else {
     printf("Error en el cliente\n");
   }
-  msg_code2 = server_receive_id(players_info_1->socket_c1);
+  msg_code2 = server_receive_id(players_info_2->socket_c1);
   if (msg_code2 == 4) {
     NICK2 = server_receive_payload(players_info_2->socket_c1);
     printf("Nickname 2: %s\n", NICK2);
