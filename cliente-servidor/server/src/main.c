@@ -86,22 +86,78 @@ int main(int argc, char *argv[]){
     }
   }
 
-  // Se crea el servidor y se obtienen los sockets de ambos clientes.
-  PlayersInfo * players_info = prepare_sockets_and_get_clients(IP, PORT);
+  char * empty_message = "";
+  char * NICK1;
+  char * NICK2;
+  // Se obtiene el socket del primer cliente
+  PlayersInfo * players_info_1= prepare_socket_and_get_client(IP, PORT);
+  printf("Se obtuvo la info del primer cliente\n");
+  int msg_code1 = server_receive_id(players_info_1->socket_c1);
+  server_receive_payload(players_info_1->socket_c1);
+  if (msg_code1 == 1) {
+    server_send_message(players_info_1->socket_c1, 2, empty_message);
+    server_send_message(players_info_1->socket_c1, 3, empty_message);
+  }
+  else {
+    printf("Error en el cliente\n");
+  }
+  msg_code1 = server_receive_id(players_info_1->socket_c1);
+  
+  if (msg_code1 == 4) {
+    NICK1 = server_receive_payload(players_info_1->socket_c1);
+    printf("Nickname 1: %s\n", NICK1);
+  }
+  else {
+    printf("Error en el cliente\n");
+  }
+  
+  
+
+  //Se obtiene el socket del segundo cliente
+  PlayersInfo * players_info_2 = prepare_socket_and_get_client(IP, PORT);
+  printf("Se obtuvo la info del segundo cliente\n");
+  int msg_code2 = server_receive_id(players_info_2->socket_c1);
+  server_receive_payload(players_info_2->socket_c1);
+  if (msg_code2 == 1) {
+    server_send_message(players_info_2->socket_c1, 2, empty_message);
+  }
+  else {
+    printf("Error en el cliente\n");
+  }
+  msg_code2 = server_receive_id(players_info_1->socket_c1);
+  if (msg_code2 == 4) {
+    NICK2 = server_receive_payload(players_info_2->socket_c1);
+    printf("Nickname 2: %s\n", NICK2);
+  }
+  else {
+    printf("Error en el cliente\n");
+  }
+
+
   int game_start = 1;
   int score_player1 = 0;
   int score_player2 = 0;
   int round = 1;
-  int sockets_array[2] = {players_info->socket_c1, players_info->socket_c2};
-  char * NICK1;
-  char * NICK2;
-  char * empty_message = "";
+  int sockets_array[2] = {players_info_1->socket_c1, players_info_2->socket_c1};
+  
+  
   // Le enviamos al primer cliente un mensaje de bienvenida
   //char * nickname = "Ingrese su Nickname: ";
   // preguntamos el nickname al cliente 1
+
+  while(1) {
+    usleep(30000);
+  }
+
   
-  int msg_code1 = server_receive_id(sockets_array[0]);
-  int msg_code2 = server_receive_id(sockets_array[1]);
+  
+  msg_code1 = server_receive_id(sockets_array[0]);
+  
+  msg_code2 = server_receive_id(sockets_array[1]);
+  printf("code: %d\n", msg_code1);
+  printf("code: %d\n", msg_code2);
+
+  
 
   if(msg_code1 == 1) server_send_message(sockets_array[0], 2, empty_message);
   if(msg_code2 == 1) server_send_message(sockets_array[1], 2, empty_message);

@@ -148,21 +148,23 @@ int main (int argc, char *argv[]){
     printf("Ingerese numero de la opcion: ");
     char * response = get_input();
     if (response[0] == '1') {
+      int server_socket = prepare_socket(IP, PORT);
+      char * cards_message;
+      int id;
+      int game_number;
+      char * nombre = malloc(40);
+      char * rival = malloc(40);
+      char * empty_message = "";
+      client_send_message(server_socket, 1, empty_message);
       while(1) //while(play)
       {         
-        int server_socket = prepare_socket(IP, PORT);
-        char * cards_message;
-        int id;
-        int game_number;
-        char * nombre = malloc(40);
-        char * rival = malloc(40);
-        char * empty_message = "";
-        client_send_message(server_socket, 1, empty_message);
         
         int msg_code = client_receive_id(server_socket);
+        
 
         if (msg_code == 2) {
           //CONNECTION ESTABLISHED
+          client_receive_payload(server_socket);
           printf("Se ha establecido exitosamente la conexion con el servidor\n");
         }
 
@@ -170,6 +172,7 @@ int main (int argc, char *argv[]){
           //char * message = client_receive_payload(server_socket);
           //printf("%s", message);
           //free(message);
+          client_receive_payload(server_socket);
           printf("Ingrese su Nickname: ");
           char * response = get_input();
           nombre = response;
@@ -177,6 +180,7 @@ int main (int argc, char *argv[]){
           printf("Se ha enviado el nickname al servidor\n");
           printf("Esperando al oponente\n");
         }
+
         if (msg_code == 5) {
           //OPPONENT FOUND
           char * message = client_receive_payload(server_socket);
@@ -184,6 +188,7 @@ int main (int argc, char *argv[]){
           rival = message;
           free(message);
         }
+
         if (msg_code == 6) {
           //SEND ID'S
           char * message = client_receive_payload(server_socket);
@@ -208,6 +213,7 @@ int main (int argc, char *argv[]){
         
           
         }
+
         if (msg_code == 8) {
           //SCORES
           char * message = client_receive_payload(server_socket);
@@ -219,6 +225,7 @@ int main (int argc, char *argv[]){
 
     
         }
+
         if (msg_code == 9) {
           //SEND CARDS
           cards_message = client_receive_payload(server_socket);
@@ -240,6 +247,7 @@ int main (int argc, char *argv[]){
             else printf("Opción invalida, intente de nuevo \n");
           }
         }
+
         if (msg_code == 11) {
           //RESPONSE WORD
           char * message = client_receive_payload(server_socket);
@@ -257,6 +265,7 @@ int main (int argc, char *argv[]){
           }
     
         }
+
         if (msg_code == 12) {
           //ROUND WINNER/LOOSER
           char * message = client_receive_payload(server_socket);
@@ -272,12 +281,14 @@ int main (int argc, char *argv[]){
             }
           }
         }
+
         if (msg_code == 13) {
           //END GAME
           char * message = client_receive_payload(server_socket);
           int numero_partida = message[0];
           printf("Se ha terminado la partida numero %d\n", numero_partida);
         }
+
         if (msg_code == 14) {
           //GAME WINNER/LOOSER
           char * message = client_receive_payload(server_socket);
@@ -288,8 +299,10 @@ int main (int argc, char *argv[]){
             printf("Perdiste la partida\n");
           }
         }
+
         if (msg_code == 15) {
           //ASK NEW GAME
+          client_receive_payload(server_socket);
           while (1) {
             printf("Deseas jugar otra partida?\n1)Si\n2)No");
             char * response = get_input();
@@ -315,12 +328,15 @@ int main (int argc, char *argv[]){
         
         if (msg_code == 17) {
           //DISCONNECT
+          client_receive_payload(server_socket);
           printf("Te has desconectado del servidor");
           close(server_socket);
           break;
         }
+
         if (msg_code == 20) {
           //ERROR BAD PACKAGE
+          client_receive_payload(server_socket);
           printf("Se ha enviado un paquete con ID erroneo al servidor\n");
           close(server_socket);
           break;

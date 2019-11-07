@@ -15,3 +15,7 @@ typedef struct players_info{
 } PlayersInfo;
 
 PlayersInfo * prepare_sockets_and_get_clients(char * IP, int port);
+PlayersInfo * prepare_socket_and_get_client(char * IP, int port);
+PlayersInfo * get_client(int server_socket);
+int prepare_socket(char * IP, int port);
+
