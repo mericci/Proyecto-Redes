@@ -148,7 +148,7 @@ int main (int argc, char *argv[]){
     printf("Ingerese numero de la opcion: ");
     char * response = get_input();
     if (response[0] == '1') {
-      while(play)
+      while(1) //while(play)
       {         
         int server_socket = prepare_socket(IP, PORT);
         char * cards_message;
@@ -176,13 +176,6 @@ int main (int argc, char *argv[]){
           client_send_message(server_socket, 4, response);
           printf("Se ha enviado el nickname al servidor\n");
           printf("Esperando al oponente\n");
-        }
-          
-        if(msg_code == 6)
-        {
-          char * message = client_receive_payload(server_socket);
-          printf("%s\n", message);
-          free(message);
         }
         if (msg_code == 5) {
           //OPPONENT FOUND
@@ -334,7 +327,7 @@ int main (int argc, char *argv[]){
 
         }
       
-        printf("------------------\n");
+        //printf("------------------\n");
       }
        
     
@@ -342,7 +335,8 @@ int main (int argc, char *argv[]){
     else if (response[0] == '2') {
       printf("Haz abandonado la partida\n");
       break;
-    } else {
+    } 
+    else {
       printf("No existe esa opcion\n");
     }
   }

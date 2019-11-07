@@ -74,10 +74,7 @@ int main(int argc, char *argv[]){
       }
 
     }
-
-
   }
-
   else {
     //no tiene l flag
     if (strcmp(argv[1], "-i") == 0) {
@@ -89,9 +86,6 @@ int main(int argc, char *argv[]){
     }
   }
 
-
-  
-
   // Se crea el servidor y se obtienen los sockets de ambos clientes.
   PlayersInfo * players_info = prepare_sockets_and_get_clients(IP, PORT);
   int game_start = 1;
@@ -99,30 +93,40 @@ int main(int argc, char *argv[]){
   int score_player2 = 0;
   int round = 1;
   int sockets_array[2] = {players_info->socket_c1, players_info->socket_c2};
+  char * NICK1;
+  char * NICK2;
+  char * empty_message = "";
   // Le enviamos al primer cliente un mensaje de bienvenida
   //char * nickname = "Ingrese su Nickname: ";
   // preguntamos el nickname al cliente 1
-  server_send_message(sockets_array[0], 3, ""); // o agregar nickname
-  // Esperamos respuesta del cliente 1
-  int nickname1 = server_receive_id(sockets_array[0]);
-  char * NICK1 = server_receive_payload(sockets_array[0]);
-  // preguntamos el nickname al cliente 2
-
-  server_send_message(sockets_array[1], 3, ""); // o agregar nickname
-  // Esperamos respuesta del cliente 1
-  int nickname2 = server_receive_id(sockets_array[1]);
-  char * NICK2 = server_receive_payload(sockets_array[1]);
-
-  server_send_message(sockets_array[0], 5, NICK2); //enviamos nombre del contrincante
-  server_send_message(sockets_array[1], 5, NICK1); // enviamos nombre del contrincante
-
-  server_send_message(sockets_array[0], 6, 1); // OJO: puede tener que ser como string
-  server_send_message(sockets_array[1], 6, 2);
   
+  int msg_code1 = server_receive_id(sockets_array[0]);
+  int msg_code2 = server_receive_id(sockets_array[1]);
 
+  if(msg_code1 == 1) server_send_message(sockets_array[0], 2, empty_message);
+  if(msg_code2 == 1) server_send_message(sockets_array[1], 2, empty_message);
+
+  server_send_message(sockets_array[0], 3, empty_message); // o agregar nickname
+  server_send_message(sockets_array[1], 3, empty_message); // o agregar 
+
+  msg_code1 = server_receive_id(sockets_array[0]);
+  msg_code2 = server_receive_id(sockets_array[1]);
+  if(msg_code1 == 4) NICK1 = server_receive_payload(sockets_array[0]);
+  if(msg_code2 == 4) NICK2 = server_receive_payload(sockets_array[1]);
+  printf("%s     v/s    %s\n",NICK1,NICK2);
+
+  
+  server_send_message(sockets_array[0], 5, NICK1); //enviamos nombre del contrincante
+  server_send_message(sockets_array[1], 5, NICK2); // enviamos nombre del contrincante
+
+  server_send_message(sockets_array[0], 6, 1);
+  server_send_message(sockets_array[1], 6, 2);
+
+    
 
   while(1)
   {
+    
     //TITULO
     dobble(sockets_array);
 
@@ -130,6 +134,7 @@ int main(int argc, char *argv[]){
     server_send_message(sockets_array[1], 7, round);
 
     //marcador actual
+    /*
     server_send_message(sockets_array[0], 8, "Puntajes: \n");
     server_send_message(sockets_array[1], 8, "Puntajes: \n");
     server_send_message(sockets_array[0], 8, NICK1);
@@ -143,7 +148,14 @@ int main(int argc, char *argv[]){
     server_send_message(sockets_array[0], 8, ": \n");
     server_send_message(sockets_array[1], 8, ": \n");
     server_send_message(sockets_array[0], 8, score_player2);
-    server_send_message(sockets_array[1], 8, score_player2);
+    server_send_message(sockets_array[1], 8, score_player2);*/
+
+    //char * score_1 = score_player1 + '0';
+    //char * score_2 = score_player2 + '0';
+    
+    int both = score_player1 & score_player2;
+
+    //server_send_message(sockets_array[0], 8, both);
 
     
     //server_send_message(sockets_array[0], 9, tablero);
