@@ -28,17 +28,14 @@ char** leer_palabras(FILE* archivo){
     int leyendo = 0;
 
     while ((read = getline(&line, &len, archivo)) != -1) {
-        printf("Retrieved line of length %zu:\n", read);
-        printf("%s", line);
+        //printf("Retrieved line of length %zu:\n", read);
+        //printf("%s", line);
         strtok(line, "\n");
         strcpy(lectura[leyendo], line);
         leyendo+=1;
     }
 
-    for (int z = 0; z < 1001; z++)
-    {
-       printf("sss %s ddddd ---- %i \n", lectura[z], z);
-    }
+    
     
     
     
@@ -95,7 +92,7 @@ unsigned char * crear_cartas(char** lectura){
     for (int i = 0; i < 19; i++)
     {
        strcpy(elegidas[i], lectura[random_numbers[i]]);
-       printf("elegida:  %s, %i\n", elegidas[i], i);
+       //printf("elegida:  %s, %i\n", elegidas[i], i);
     }
 
     int* random_position = malloc(20 * sizeof(int));
@@ -147,7 +144,7 @@ unsigned char * crear_cartas(char** lectura){
 
             strcpy(definitivo_orden[random_position[i]], elegidas[chosen]);
             chosen +=1;
-            printf("chosem:%s, pos: %i \n", elegidas[chosen], random_position[i]);
+            //printf("chosem:%s, pos: %i \n", elegidas[chosen], random_position[i]);
 
         }
     }
@@ -158,14 +155,14 @@ unsigned char * crear_cartas(char** lectura){
     {
         if (definitivo_orden[i][0] == '1')
         {
-            printf("quede 1\n");
+            //printf("quede 1\n");
             largo[i] = 10;
         }
         else
         {
             largo[i] = atoi(&definitivo_orden[i][0]);
         }    
-        printf("quede 2 %c\n", definitivo_orden[i][0]);
+        //printf("quede 2 %c\n", definitivo_orden[i][0]);
     }
 
     int* posiciones = malloc(20 * sizeof(int));
@@ -177,7 +174,7 @@ unsigned char * crear_cartas(char** lectura){
     {
         random_pos = random_number(20 - largo[actual]);
         posiciones[actual] = random_pos;
-        printf("%s, comienza en %i\n", definitivo_orden[actual], posiciones[actual]);
+        //printf("%s, comienza en %i\n", definitivo_orden[actual], posiciones[actual]);
         actual+=1;
         asignadas+=1;
     }
@@ -187,16 +184,15 @@ unsigned char * crear_cartas(char** lectura){
     {
         largo_total+= largo[i];
     }
-    printf("%i\n", largo_total);
+    //printf("%i\n", largo_total);
 
     //char respuesta[largo_total + 2];
-    unsigned char * respuesta = malloc(sizeof(char) * (largo_total + 1));
+    unsigned char * respuesta = malloc(sizeof(char) * (largo_total + 2));
 
-    int id = 0;
-    //respuesta[0] = id;
-    //respuesta[1] = largo_total;
-    respuesta[0] = largo_total;
-    int ingresar_en = 1;
+    respuesta[0] = 9;
+    respuesta[1] = largo_total;
+    int ingresar_en = 2;
+    printf("largo total: %d\n", largo_total);
 
     for (int i = 0; i < 20; i++)
     {
@@ -248,19 +244,7 @@ unsigned char * crear_cartas(char** lectura){
         
     }
 
-    for (int i = 0; i < largo_total + 2; i++)
-    {
-        if (i==1)
-        {
-            printf("--mm %i\n" , (int)respuesta[i]);
-        }
-        else
-        {
-            printf("%c\n", respuesta[i]);
-        }
-        
-        
-    }
+    
     
     
 

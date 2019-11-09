@@ -3,7 +3,7 @@
 #include "conection.h"
 #include "comunication.h"
 
-void print_cards(char * message) {
+void print_cards(unsigned char * message) {
   int current_position = 0;
   char ** words = malloc(sizeof(char*) * 20);
   int * words_length = malloc(sizeof(int) * 20);
@@ -160,7 +160,7 @@ int main (int argc, char *argv[]){
     char * response = get_input();
     if (response[0] == '1') {
       int server_socket = prepare_socket(IP, PORT);
-      char * cards_message;
+      unsigned char * cards_message;
       int id;
       int game_number;
       char * nombre = malloc(40);
@@ -246,6 +246,19 @@ int main (int argc, char *argv[]){
         if (msg_code == 9) {
           //SEND CARDS
           cards_message = client_receive_payload(server_socket);
+          int current_position = 0;
+          for(int i = 0; i < 20; i++){
+            int length = cards_message[current_position];
+            current_position++;
+            printf("length: %d\n", length);
+            for (int i = 0; i < length; i++) {
+              printf("%c", cards_message[current_position]);
+              current_position++;
+            }
+            int position = cards_message[current_position];
+            current_position++;
+            printf("position: %d\n", position);
+          }
           print_cards(cards_message);
           while(1)
           {

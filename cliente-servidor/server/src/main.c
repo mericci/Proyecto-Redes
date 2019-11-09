@@ -34,13 +34,14 @@ void dobble(int sockets_array[2])
   server_send_message(sockets_array[0], 7, juego8);
   server_send_message(sockets_array[1], 7, juego8);
 }
+
 struct arg_struct {
     int client_socket;
     int sockets_array[2];
     int game_start;
     int score_player1;
     int score_player2;
-    char ** leidas;
+    unsigned char * cards;
 };
 
 void *game_function(void *arguments) {
@@ -56,10 +57,11 @@ void *game_function(void *arguments) {
     printf("client socket thread: %d\n", args->client_socket);
     //player1
     server_send_message(args->sockets_array[0], 7, message_1);
-    printf("LALAL\n");
     message_2[0] = args->score_player1;
     message_2[1] = args->score_player2;
     server_send_message(args->sockets_array[0], 8, message_2);
+    server_send_cards(args->sockets_array[0], args->cards);
+
   }
   else{
     //player2
@@ -67,6 +69,8 @@ void *game_function(void *arguments) {
     message_2[0] = args->score_player2;
     message_2[1] = args->score_player1;
     server_send_message(args->sockets_array[1], 8, message_2);
+    server_send_cards(args->sockets_array[1], args->cards);
+
   }
   free(message_1);
   free(message_2);
@@ -198,10 +202,10 @@ int main(int argc, char *argv[]){
   server_send_message(sockets_array[1], 6, message_1);
 
   //COMIENZA EL JUEGO
+
   FILE * archivo = fopen("../../palabras.txt", "r");
   char ** leidas;
   leidas = leer_palabras(archivo);
-  printf("lala\n");
 
   while(1) {
 
@@ -209,6 +213,7 @@ int main(int argc, char *argv[]){
     printf("client socket thread: %d\n", sockets_array[0]);
 
 
+    unsigned char * cards = crear_cartas(leidas);
 
     pthread_t thread_id1;
     struct arg_struct args1;
@@ -218,7 +223,7 @@ int main(int argc, char *argv[]){
     args1.game_start = game_start;
     args1.score_player1 = score_player1;
     args1.score_player2 = score_player2;
-    args1.leidas = leidas;
+    args1.cards = cards;
 
     pthread_t thread_id2;
     struct arg_struct args2;
@@ -228,7 +233,7 @@ int main(int argc, char *argv[]){
     args2.game_start = game_start;
     args2.score_player1 = score_player1;
     args2.score_player2 = score_player2;
-    args2.leidas = leidas;
+    args2.cards = cards;
 
 
     printf("Before Thread\n"); 
@@ -236,22 +241,19 @@ int main(int argc, char *argv[]){
     pthread_create(&thread_id2, NULL, &game_function, (void *)&args2 );
     //pthread_join(thread_id, NULL); 
     printf("After Thread\n");
-    int largo;
-    unsigned char * l = crear_cartas(leidas);
-    largo = l[0];
-    printf("largo: %d\n", largo);
-    int current_position = 1;
+
+    int current_position = 2;
 
     
-    while(current_position <= largo){
-      int length = l[current_position];
+    for(int i = 0; i < 20; i++){
+      int length = cards[current_position];
       current_position++;
       printf("length: %d\n", length);
       for (int i = 0; i < length; i++) {
-        printf("%c", l[current_position]);
+        printf("%c", cards[current_position]);
         current_position++;
       }
-      int position = l[current_position];
+      int position = cards[current_position];
       current_position++;
       printf("position: %d\n", position);
     }
@@ -300,33 +302,11 @@ int main(int argc, char *argv[]){
 
     
 
-    //marcador actual
-    /*
-    server_send_message(sockets_array[0], 8, "Puntajes: \n");
-    server_send_message(sockets_array[1], 8, "Puntajes: \n");
-    server_send_message(sockets_array[0], 8, NICK1);
-    server_send_message(sockets_array[1], 8, NICK1);
-    server_send_message(sockets_array[0], 8, ": \n ");
-    server_send_message(sockets_array[1], 8, ": \n ");
-    server_send_message(sockets_array[0], 8, score_player1);
-    server_send_message(sockets_array[1], 8, score_player1);
-    server_send_message(sockets_array[0], 8, NICK2);
-    server_send_message(sockets_array[1], 8, NICK2);
-    server_send_message(sockets_array[0], 8, ": \n");
-    server_send_message(sockets_array[1], 8, ": \n");
-    server_send_message(sockets_array[0], 8, score_player2);
-    server_send_message(sockets_array[1], 8, score_player2);*/
-
-    //char * score_1 = score_player1 + '0';
-    //char * score_2 = score_player2 + '0';
+    
     
     int both = score_player1 & score_player2;
 
-    //server_send_message(sockets_array[0], 8, both);
-
     
-    //server_send_message(sockets_array[0], 9, tablero);
-    //server_send_message(sockets_array[1], 9, tablero);
 
   
   
