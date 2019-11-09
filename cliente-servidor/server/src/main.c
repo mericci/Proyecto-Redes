@@ -203,6 +203,7 @@ int main(int argc, char *argv[]){
 
   //COMIENZA EL JUEGO
 
+  my_init();
   FILE * archivo = fopen("../../palabras.txt", "r");
   char ** leidas;
   leidas = leer_palabras(archivo);

@@ -31,7 +31,7 @@ void server_send_message(int client_socket, int pkg_id, char * message){
 
 void server_send_cards(int client_socket, unsigned char * message){
   //int payloadSize = strlen(m) + 1;
-  int payloadSize = message[1] + 1;
+  int payloadSize = message[1] + 2;
   
   printf("payload size: %d\n", payloadSize);
   // Se arma el paquete
