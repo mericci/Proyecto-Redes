@@ -61,7 +61,7 @@ void *game_function(void *arguments) {
 
   if (args->client_socket == args->sockets_array[0]) {
     //player1
-    server_send_message(args->sockets_array[0], 7, message_1);
+    //server_send_message(args->sockets_array[0], 7, message_1);
     message_2[0] = args->score_player1;
     message_2[1] = args->score_player2;
     server_send_message_2bytes(args->sockets_array[0], 8, message_2);
@@ -114,7 +114,7 @@ void *game_function(void *arguments) {
 
   else{
     //player2
-    server_send_message(args->sockets_array[1], 7, message_1);
+    //server_send_message(args->sockets_array[1], 7, message_1);
     message_2[0] = args->score_player2;
     message_2[1] = args->score_player1;
     server_send_message_2bytes(args->sockets_array[1], 8, message_2);
@@ -301,8 +301,12 @@ int main(int argc, char *argv[]){
 
   while(1) {
     //cada ronda recorre esto
+    if (round == 1) {
+      message_1[0] = game_start;
+      server_send_message(sockets_array[0], 7, message_1);
+      server_send_message(sockets_array[1], 7, message_1);
+    }
     
-
 
     unsigned char * cards = crear_cartas(leidas);
     char * answer = correct_answer(cards);
@@ -361,7 +365,50 @@ int main(int argc, char *argv[]){
     round++;
 
     if (round > 5) {
-      break;
+      message_1[0] = game_start;
+      server_send_message(sockets_array[0], 13, message_1);
+      server_send_message(sockets_array[1], 13, message_1);
+      int winner_id = 0;
+
+      if (score_player1 > score_player2) {
+        winner_id = score_player1;
+      }
+      else if (score_player2 > score_player1) {
+        winner_id = score_player2;
+      }
+      message_1[0] = winner_id;
+      server_send_message(sockets_array[0], 14, message_1);
+      server_send_message(sockets_array[1], 14, message_1);
+
+      server_send_message(sockets_array[0], 15, message_1);
+      server_send_message(sockets_array[1], 15, message_1);
+      char * response_payload_1;
+      char * response_payload_2;
+      printf("ACA\n");
+
+      int response_1;
+      int response_2;
+      server_receive_id(sockets_array[0]);
+      server_receive_id(sockets_array[1]);
+      response_payload_1 = server_receive_payload(sockets_array[0]);
+      response_payload_2 = server_receive_payload(sockets_array[0]);
+      response_1 = response_payload_1[0];
+      response_2 = response_payload_2[0];
+      printf("response 1: %d\n", response_1);
+      printf("response 2: %d\n", response_2);
+
+
+      if ((response_1 == 1) && (response_2 == 1)) {
+        game_start++;
+        round = 1;
+      }
+      else{
+        server_send_message(sockets_array[0], 17, message_1);
+        server_send_message(sockets_array[1], 17, message_1);
+        break;
+      }
+
+
     }
 
   }

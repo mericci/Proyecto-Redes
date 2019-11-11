@@ -4,6 +4,7 @@
 #include "comunication.h"
 
 int ROUND_WINNER = 0;
+int ROUND_NUMBER = 5;
 
 
 void print_cards(unsigned char * message) {
@@ -291,8 +292,15 @@ int main (int argc, char *argv[]){
 
         if (msg_code == 12) {
           //ROUND WINNER/LOOSER
+          if (ROUND_NUMBER == 5) {
+            ROUND_NUMBER = 1;
+          }
+          else {
+            ROUND_NUMBER++;
+          }
           char * message = client_receive_payload(server_socket);
           int winner_id = message[0];
+          printf("RONDA: %d\n", ROUND_NUMBER);
           
           if (winner_id == 0) {
             printf("Empate\n");
@@ -327,7 +335,7 @@ int main (int argc, char *argv[]){
           //ASK NEW GAME
           client_receive_payload(server_socket);
           while (1) {
-            printf("Deseas jugar otra partida?\n1)Si\n2)No");
+            printf("Deseas jugar otra partida?\n1)Si\n2)No\nIngrese numero: ");
             char * response = get_input();
             if (response[0] == '1') {
               char * res = malloc(sizeof(char));
