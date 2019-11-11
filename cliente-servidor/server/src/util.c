@@ -192,7 +192,6 @@ unsigned char * crear_cartas(char** lectura){
     respuesta[0] = 9;
     respuesta[1] = largo_total;
     int ingresar_en = 2;
-    printf("largo total: %d\n", largo_total);
 
     for (int i = 0; i < 20; i++)
     {
@@ -251,5 +250,49 @@ unsigned char * crear_cartas(char** lectura){
     
     return respuesta;
 
+
+}
+
+
+char * correct_answer(unsigned char * cards) {
+  int current_position = 2;
+  char ** words = malloc(sizeof(char*) * 20);
+  int * words_length = malloc(sizeof(int) * 20);
+  int * words_position = malloc(sizeof(int) * 20);
+  for (int i = 0; i < 20; i++) {
+    words_length[i] = cards[current_position];
+    current_position ++;
+    words[i] = malloc(sizeof(char) * words_length[i]);
+    char * word = words[i];
+    for (int j = 0; j < words_length[i]; j++) {
+      word[j] = cards[current_position];
+      current_position ++;
+    }
+    words_position[i] = cards[current_position];
+    current_position ++;
+  }
+  char * answer;
+
+  for (int i = 0; i < 10; i++) {
+    char * current_word_1 = words[i];
+    for (int j = 0; j < 10; j++) {
+        char * current_word_2 = words[10 + j];
+        if (strcmp(current_word_1, current_word_2) == 0) {
+            answer = current_word_1;
+            printf("answer: %s\n", answer);
+            return answer;
+        }
+    }
+  }
+  //FREE
+  for (int i = 0; i < 20; i++) {
+    free(words[i]);
+  }
+  free(words_length);
+  free(words_position);
+  free(words);
+
+  return answer;
+  
 
 }

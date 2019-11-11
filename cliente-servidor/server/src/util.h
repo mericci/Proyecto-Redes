@@ -15,3 +15,4 @@ int* random_function( int max, int quantity);
 void my_init();
 
 int random_number(int max);
+char * correct_answer(unsigned char * cards);

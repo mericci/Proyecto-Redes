@@ -9,7 +9,7 @@ int client_receive_id(int client_socket){
 
 char * client_receive_payload(int client_socket){
   // Se obtiene el largo del payload
-  int len = 0;
+  unsigned int len = 0;
   recv(client_socket, &len, 1, 0);
   // Se obtiene el payload
   char * payload = malloc(len);

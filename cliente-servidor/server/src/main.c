@@ -6,6 +6,11 @@
 #include <pthread.h>
 #include "util.h"
 
+int ROUND_SCORE_1;
+int ROUND_SCORE_2;
+int FINISHED_1 = 0;
+int FINISHED_2 = 0;
+
 void dobble(int sockets_array[2])
 {
   char * juego1 =  "/$$$$$$$    /$$$$$$  /$$$$$$$  /$$$$$$$  /$$       /$$$$$$$$\n";
@@ -42,6 +47,7 @@ struct arg_struct {
     int score_player1;
     int score_player2;
     unsigned char * cards;
+    char * answer;
 };
 
 void *game_function(void *arguments) {
@@ -54,22 +60,107 @@ void *game_function(void *arguments) {
   
 
   if (args->client_socket == args->sockets_array[0]) {
-    printf("client socket thread: %d\n", args->client_socket);
     //player1
     server_send_message(args->sockets_array[0], 7, message_1);
     message_2[0] = args->score_player1;
     message_2[1] = args->score_player2;
-    server_send_message(args->sockets_array[0], 8, message_2);
+    server_send_message_2bytes(args->sockets_array[0], 8, message_2);
     server_send_cards(args->sockets_array[0], args->cards);
+    int numero_intento = 1;
+    char * response;
+    ROUND_SCORE_1 = 0;
+    while (numero_intento <= 3) {
+      int id = server_receive_id(args->sockets_array[0]);
+      if (id == 10) {
+        //SEND WORD
+        response = server_receive_payload(args->sockets_array[0]);
+        if (strcmp(response, args->answer) == 0) {
+          if (numero_intento == 1) {
+            ROUND_SCORE_1 = 5;
+          }
+          else if (numero_intento == 2) {
+            ROUND_SCORE_1 = 3;
+          }
+          else {
+            ROUND_SCORE_1 = 1;
+          }
+          message_2[0] = 1;
+          message_2[1] = 3 - numero_intento;
+          server_send_message_2bytes(args->sockets_array[0], 11, message_2);
+          break;
+
+        }
+        else {
+          
+          message_2[0] = 0;
+          message_2[1] = 3 - numero_intento;
+          int intentos_restantes = 3 - numero_intento;
+          message_2[1] = intentos_restantes;
+          server_send_message_2bytes(args->sockets_array[0], 11, message_2);
+          if (numero_intento < 3) {
+            server_send_cards(args->sockets_array[0], args->cards);
+          }
+        }
+      } 
+      else {
+        //DESCONECCION
+      }
+      numero_intento++;
+
+    }
+    FINISHED_1 = 1;
 
   }
+
   else{
     //player2
     server_send_message(args->sockets_array[1], 7, message_1);
     message_2[0] = args->score_player2;
     message_2[1] = args->score_player1;
-    server_send_message(args->sockets_array[1], 8, message_2);
+    server_send_message_2bytes(args->sockets_array[1], 8, message_2);
     server_send_cards(args->sockets_array[1], args->cards);
+    int numero_intento = 1;
+    char * response;
+    ROUND_SCORE_2 = 0;
+    while (numero_intento <= 3) {
+      int id = server_receive_id(args->sockets_array[1]);
+      if (id == 10) {
+        //SEND WORD
+        response = server_receive_payload(args->sockets_array[1]);
+        if (strcmp(response, args->answer) == 0) {
+          if (numero_intento == 1) {
+            ROUND_SCORE_2 = 5;
+          }
+          else if (numero_intento == 2) {
+            ROUND_SCORE_2 = 3;
+          }
+          else {
+            ROUND_SCORE_2 = 1;
+          }
+          message_2[0] = 1;
+          message_2[1] = 3 - numero_intento;
+          server_send_message_2bytes(args->sockets_array[1], 11, message_2);
+          break;
+
+        }
+        else {
+          
+          message_2[0] = 0;
+          message_2[1] = 3 - numero_intento;
+          server_send_message_2bytes(args->sockets_array[1], 11, message_2);
+          if (numero_intento < 3) {
+            server_send_cards(args->sockets_array[1], args->cards);
+          }
+          
+        }
+      } 
+      else {
+        //DESCONECCION
+      }
+      numero_intento++;
+
+    }
+    FINISHED_2 = 1;
 
   }
   free(message_1);
@@ -209,12 +300,12 @@ int main(int argc, char *argv[]){
   leidas = leer_palabras(archivo);
 
   while(1) {
-
+    //cada ronda recorre esto
     
-    printf("client socket thread: %d\n", sockets_array[0]);
 
 
     unsigned char * cards = crear_cartas(leidas);
+    char * answer = correct_answer(cards);
 
     pthread_t thread_id1;
     struct arg_struct args1;
@@ -225,6 +316,7 @@ int main(int argc, char *argv[]){
     args1.score_player1 = score_player1;
     args1.score_player2 = score_player2;
     args1.cards = cards;
+    args1.answer = answer;
 
     pthread_t thread_id2;
     struct arg_struct args2;
@@ -235,48 +327,45 @@ int main(int argc, char *argv[]){
     args2.score_player1 = score_player1;
     args2.score_player2 = score_player2;
     args2.cards = cards;
+    args2.answer = answer;
 
 
     printf("Before Thread\n"); 
     pthread_create(&thread_id1, NULL, &game_function, (void *)&args1 );
     pthread_create(&thread_id2, NULL, &game_function, (void *)&args2 );
-    //pthread_join(thread_id, NULL); 
-    printf("After Thread\n");
-
-    int current_position = 2;
-
-    
-    for(int i = 0; i < 20; i++){
-      int length = cards[current_position];
-      current_position++;
-      printf("length: %d\n", length);
-      for (int i = 0; i < length; i++) {
-        printf("%c", cards[current_position]);
-        current_position++;
-      }
-      int position = cards[current_position];
-      current_position++;
-      printf("position: %d\n", position);
+    while ((FINISHED_1 == 0) || (FINISHED_2 == 0)) {
+      //usleep(100);
     }
-    
+    printf("After Thread\n");
+    FINISHED_1 = 0;
+    FINISHED_2 = 0;
 
-    
+    score_player1 += ROUND_SCORE_1;
+    score_player2 += ROUND_SCORE_2;
+    int round_winner_id = 0;
+    if (ROUND_SCORE_1 > ROUND_SCORE_2) {
+      round_winner_id = 1;
+    }
+    else if (ROUND_SCORE_2 > ROUND_SCORE_1) {
+      round_winner_id = 2;
+    }
+    char * round_winner_message = malloc(sizeof(char));
+    round_winner_message[0] = round_winner_id;
+    server_send_message(sockets_array[0], 12, round_winner_message);
+    server_send_message(sockets_array[1], 12, round_winner_message);
+    ROUND_SCORE_1 = 0;
+    ROUND_SCORE_2 = 0;
 
-    usleep(8000000000000);
+        
+
+    round++;
+
+    if (round > 5) {
+      break;
+    }
 
   }
 
-  message_1[0] = game_start;
-  server_send_message(sockets_array[0], 7, message_1);
-  server_send_message(sockets_array[1], 7, message_1);
-
-  message_2[0] = score_player1;
-  message_2[1] = score_player2;
-  server_send_message(sockets_array[0], 8, message_2);
-
-  message_2[0] = score_player2;
-  message_2[1] = score_player1;
-  server_send_message(sockets_array[1], 8, message_2);
   
   
 
@@ -285,35 +374,6 @@ int main(int argc, char *argv[]){
   }
 
   
-  
-  
-
-  
-  
-
-  
-
-    
-
-  while(1)
-  {
-    
-    //TITULO
-    dobble(sockets_array);
-
-    
-
-    
-    
-    int both = score_player1 & score_player2;
-
-    
-
-  
-  
-  
-  printf("------------------\n");
-  }
 
   return 0;
 }

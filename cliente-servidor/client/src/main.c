@@ -3,6 +3,9 @@
 #include "conection.h"
 #include "comunication.h"
 
+int ROUND_WINNER = 0;
+
+
 void print_cards(unsigned char * message) {
   int current_position = 0;
   char ** words = malloc(sizeof(char*) * 20);
@@ -62,6 +65,13 @@ void print_cards(unsigned char * message) {
 
   }
 
+  //FREE
+  for (int i = 0; i < 20; i++) {
+    free(words[i]);
+  }
+  free(words_length);
+  free(words_position);
+  free(words);
 
 
 }
@@ -247,35 +257,18 @@ int main (int argc, char *argv[]){
           //SEND CARDS
           cards_message = client_receive_payload(server_socket);
           int current_position = 0;
-          for(int i = 0; i < 20; i++){
-            int length = cards_message[current_position];
-            current_position++;
-            printf("length: %d\n", length);
-            for (int i = 0; i < length; i++) {
-              printf("%c", cards_message[current_position]);
-              current_position++;
-            }
-            int position = cards_message[current_position];
-            current_position++;
-            printf("position: %d\n", position);
-          }
           print_cards(cards_message);
-          while(1)
-          {
-            printf("¿Qué desea hacer?\n   1)Jugar, definir palabra\n   2)Abandonar Juego\n");
-            char * response = get_input();
-            if (response[0] == '2') {
-              client_send_message(server_socket, 17, response);
-              break;
-            }
-            else if(response[0] == '1')
-            {
-              client_send_message(server_socket, 10, response);
-              printf("\n");
-              break;
-            }
-            else printf("Opción invalida, intente de nuevo \n");
+          printf("Ingrese palabra o ingrese 9 para salir: ");
+          char * response = get_input();
+          if (response[0] == '9') {
+            client_send_message(server_socket, 17, response);
           }
+            else
+          {
+            client_send_message(server_socket, 10, response);
+            printf("\n");
+          }
+         
         }
 
         if (msg_code == 11) {
@@ -285,8 +278,8 @@ int main (int argc, char *argv[]){
           int intentos_restantes = message[1];
           if (correcto == 0) {
             //incorrecta
-            printf("respuesta incorrecta\n");
-            printf("intentos restantes: %d\n", intentos_restantes);
+            printf("Respuesta incorrecta\n");
+            printf("Intentos restantes: %d\n", intentos_restantes);
             
     
           } else {

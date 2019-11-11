@@ -29,11 +29,21 @@ void server_send_message(int client_socket, int pkg_id, char * message){
   send(client_socket, msg, 2+payloadSize, 0);
 }
 
+void server_send_message_2bytes(int client_socket, int pkg_id, char * message){
+  int payloadSize = 2;
+  // Se arma el paquete
+  char msg[1+1+payloadSize];
+  msg[0] = pkg_id;
+  msg[1] = payloadSize;
+  memcpy(&msg[2], message, payloadSize);
+  // Se envía el paquete
+  send(client_socket, msg, 2+payloadSize, 0);
+}
+
 void server_send_cards(int client_socket, unsigned char * message){
   //int payloadSize = strlen(m) + 1;
   int payloadSize = message[1] + 2;
   
-  printf("payload size: %d\n", payloadSize);
   // Se arma el paquete
   char msg[1+1+payloadSize];
  
