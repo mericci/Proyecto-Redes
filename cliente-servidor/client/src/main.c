@@ -106,7 +106,6 @@ char * get_input(){
 
 int main (int argc, char *argv[]){
 
-  
   char * IP;
   int PORT;
 
@@ -387,8 +386,9 @@ int main (int argc, char *argv[]){
       printf("No existe esa opcion\n");
     }
   }
-  
+
 
   return 0;
-}
 
+  
+}
