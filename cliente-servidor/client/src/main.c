@@ -162,7 +162,7 @@ int main (int argc, char *argv[]){
   int play;
   play = 1;
   
-  while(1)
+  while(play)
   {
     printf("1) Comenzar juego\n");
     printf("2) Abandonar\n");
@@ -316,7 +316,7 @@ int main (int argc, char *argv[]){
           printf("|_______/ |_______/ |_______/ |_______/ |________/|________/\n");
           printf("\n");
           if (ROUND_NUMBER == 5) {
-            ROUND_NUMBER = 0;
+            ROUND_NUMBER = 1;
           }
           else {
             ROUND_NUMBER++;
@@ -382,7 +382,8 @@ int main (int argc, char *argv[]){
         if (msg_code == 17) {
           //DISCONNECT
           client_receive_payload(server_socket);
-          printf("Te has desconectado del servidor");
+          printf("\nTe has desconectado del servidor\n\n");
+          play = 0;
           close(server_socket);
           break;
         }
