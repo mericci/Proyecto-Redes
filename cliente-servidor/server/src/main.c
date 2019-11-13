@@ -259,7 +259,7 @@ int main(int argc, char *argv[]){
   server_receive_payload(players_info_2->socket_c1);
   if (msg_code2 == 1) {
     server_send_message(players_info_2->socket_c1, 2, empty_message);
-  server_send_message(players_info_2->socket_c1, 3, empty_message);  }
+    server_send_message(players_info_2->socket_c1, 3, empty_message);  }
   else {
     printf("Error en el cliente\n");
   }
@@ -384,14 +384,16 @@ int main(int argc, char *argv[]){
       server_send_message(sockets_array[1], 15, message_1);
       char * response_payload_1;
       char * response_payload_2;
-      printf("ACA\n");
+      //printf("ACA\n");
 
       int response_1;
       int response_2;
-      server_receive_id(sockets_array[0]);
-      server_receive_id(sockets_array[1]);
+
+      server_receive_id(players_info_1->socket_c1);
+      server_receive_id(players_info_2->socket_c1);
+
       response_payload_1 = server_receive_payload(sockets_array[0]);
-      response_payload_2 = server_receive_payload(sockets_array[0]);
+      response_payload_2 = server_receive_payload(sockets_array[1]);
       response_1 = response_payload_1[0];
       response_2 = response_payload_2[0];
       printf("response 1: %d\n", response_1);

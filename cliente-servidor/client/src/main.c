@@ -4,7 +4,7 @@
 #include "comunication.h"
 
 int ROUND_WINNER = 0;
-int ROUND_NUMBER = 5;
+int ROUND_NUMBER = 1;
 
 
 void print_cards(unsigned char * message) {
@@ -235,7 +235,18 @@ int main (int argc, char *argv[]){
           //START GAME
           char * message = client_receive_payload(server_socket);
           game_number = message[0];
-          printf("########## PARTIDA: %d ##########\n\n", game_number);
+          printf("\n");
+          printf("/$$$$$$$    /$$$$$$  /$$$$$$$  /$$$$$$$  /$$       /$$$$$$$$\n");
+          printf("| $$__  $$ /$$__  $$| $$__  $$| $$__  $$| $$      | $$_____/\n");
+          printf("| $$  | $$| $$  | $$| $$  | $$| $$  | $$| $$      | $$\n");
+          printf("| $$  | $$| $$  | $$| $$$$$$$ | $$$$$$$ | $$      | $$$$$\n");
+          printf("| $$  | $$| $$  | $$| $$__  $$| $$__  $$| $$      | $$__/\n");
+          printf("| $$  | $$| $$  | $$| $$  | $$| $$  | $$| $$      | $$\n");
+          printf("| $$$$$$$/|  $$$$$$/| $$$$$$$/| $$$$$$$/| $$$$$$$$| $$$$$$$$\n");
+          printf("|_______/ |_______/ |_______/ |_______/ |________/|________/\n");
+
+          printf("\n########## PARTIDA: %d ##########\n\n", game_number);
+          if(ROUND_NUMBER < 6) printf("RONDA: %d\n", 1);
           free(message);
         
           
@@ -291,15 +302,27 @@ int main (int argc, char *argv[]){
 
         if (msg_code == 12) {
           //ROUND WINNER/LOOSER
+
+          char * message = client_receive_payload(server_socket);
+          int winner_id = message[0];
+          printf("\n");
+          printf("/$$$$$$$    /$$$$$$  /$$$$$$$  /$$$$$$$  /$$       /$$$$$$$$\n");
+          printf("| $$__  $$ /$$__  $$| $$__  $$| $$__  $$| $$      | $$_____/\n");
+          printf("| $$  | $$| $$  | $$| $$  | $$| $$  | $$| $$      | $$\n");
+          printf("| $$  | $$| $$  | $$| $$$$$$$ | $$$$$$$ | $$      | $$$$$\n");
+          printf("| $$  | $$| $$  | $$| $$__  $$| $$__  $$| $$      | $$__/\n");
+          printf("| $$  | $$| $$  | $$| $$  | $$| $$  | $$| $$      | $$\n");
+          printf("| $$$$$$$/|  $$$$$$/| $$$$$$$/| $$$$$$$/| $$$$$$$$| $$$$$$$$\n");
+          printf("|_______/ |_______/ |_______/ |_______/ |________/|________/\n");
+          printf("\n");
           if (ROUND_NUMBER == 5) {
-            ROUND_NUMBER = 1;
+            ROUND_NUMBER = 0;
           }
           else {
             ROUND_NUMBER++;
+            printf("RONDA: %d\n", ROUND_NUMBER);
           }
-          char * message = client_receive_payload(server_socket);
-          int winner_id = message[0];
-          printf("RONDA: %d\n", ROUND_NUMBER);
+          //printf("RONDA: %d\n", ROUND_NUMBER);
           
           if (winner_id == 0) {
             printf("Empate\n");
@@ -334,7 +357,7 @@ int main (int argc, char *argv[]){
           //ASK NEW GAME
           client_receive_payload(server_socket);
           while (1) {
-            printf("Deseas jugar otra partida?\n1)Si\n2)No\nIngrese numero: ");
+            printf("Deseas jugar otra partida?\n  1)Si\n  2)No\nIngrese numero: ");
             char * response = get_input();
             if (response[0] == '1') {
               char * res = malloc(sizeof(char));
@@ -349,7 +372,7 @@ int main (int argc, char *argv[]){
               free(res);
               break;
             } else {
-              printf("Opcion invalida\n");
+              printf("Opcion invalida\n\n");
             }
           }
           
