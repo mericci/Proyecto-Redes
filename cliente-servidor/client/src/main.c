@@ -24,43 +24,43 @@ void print_cards(unsigned char * message) {
     words_position[i] = message[current_position];
     current_position ++;
   }
-  printf("       Card 1       ");
+  printf("                Card 1                ");
   //son 5 espacios
-  printf("     ");
-  printf("       Card 2       \n");
+  printf("      ");
+  printf("                Card 2            \n");
   for (int i = 0; i < 10; i++) {
     //card1
     for (int j = 0; j < words_position[i]; j++) {
-      printf("-");
+      printf("- ");
     }
     char * word = words[i];
     for (int j = 0; j < words_length[i]; j++) {
-      printf("%c", word[j]);
+      printf("%c ", word[j]);
     }
     int restantes = 20 - words_position[i] - words_length[i];
     for (int j = 0; j < restantes; j++) {
-      printf("-");
+      printf("- ");
     }
     printf("     ");
     //card2
     for (int j = 0; j < words_position[i + 10]; j++) {
-      printf("-");
+      printf("- ");
     }
     word = words[i + 10];
     for (int j = 0; j < words_length[i + 10]; j++) {
-      printf("%c", word[j]);
+      printf("%c ", word[j]);
     }
     restantes = 20 - words_position[i + 10] - words_length[i + 10];
     for (int j = 0; j < restantes; j++) {
-      printf("-");
+      printf("- ");
     }
     printf("\n");
     for (int j = 0; j < 20; j++) {
-      printf("-");
+      printf("- ");
     }
     printf("     ");
     for (int j = 0; j < 20; j++) {
-      printf("-");
+      printf("- ");
     }
     printf("\n");
 
@@ -235,7 +235,7 @@ int main (int argc, char *argv[]){
           //START GAME
           char * message = client_receive_payload(server_socket);
           game_number = message[0];
-          printf("########## PARTIDA: %d ##########\n", game_number);
+          printf("########## PARTIDA: %d ##########\n\n", game_number);
           free(message);
         
           
@@ -390,5 +390,5 @@ int main (int argc, char *argv[]){
 
   return 0;
 
-  
+
 }
