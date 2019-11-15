@@ -180,10 +180,7 @@ int main (int argc, char *argv[]){
       client_send_message(server_socket, 1, empty_message);
       while(1) //while(play)
       {         
-        
         int msg_code = client_receive_id(server_socket);
-        
-
         if (msg_code == 2) {
           //CONNECTION ESTABLISHED
           client_receive_payload(server_socket);
@@ -392,7 +389,13 @@ int main (int argc, char *argv[]){
 
         if (msg_code == 20) {
           //ERROR BAD Pbreak;ACKAGE
-          //client_receive_payload(server_socket);
+          /*
+          Obs:
+
+          considerar cuando se tiene que mandar msg code = 1, no entrar al while
+          considerar para caso que se está jugando
+           */
+          client_receive_payload(server_socket);
           printf("Se ha enviado un paquete con ID erroneo al servidor\n");
         }
       
