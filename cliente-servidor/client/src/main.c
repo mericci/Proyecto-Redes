@@ -176,6 +176,7 @@ int main (int argc, char *argv[]){
       char * nombre = malloc(40);
       char * rival;
       char * empty_message = "";
+      //client_send_message(server_socket, 20, empty_message);
       client_send_message(server_socket, 1, empty_message);
       while(1) //while(play)
       {         
@@ -273,6 +274,7 @@ int main (int argc, char *argv[]){
           char * response = get_input();
           if (response[0] == '9') {
             client_send_message(server_socket, 17, response);
+            
           }
             else
           {
@@ -389,12 +391,9 @@ int main (int argc, char *argv[]){
         }
 
         if (msg_code == 20) {
-          //ERROR BAD PACKAGE
-          client_receive_payload(server_socket);
+          //ERROR BAD Pbreak;ACKAGE
+          //client_receive_payload(server_socket);
           printf("Se ha enviado un paquete con ID erroneo al servidor\n");
-          close(server_socket);
-          break;
-
         }
       
         //printf("------------------\n");

@@ -88,7 +88,6 @@ void *game_function(void *arguments) {
           message_2[1] = 3 - numero_intento;
           server_send_message_2bytes(args->sockets_array[0], 11, message_2);
           break;
-
         }
         else {
           
@@ -102,8 +101,13 @@ void *game_function(void *arguments) {
           }
         }
       } 
-      else {
-        //DESCONECCION
+      else if(id == 17){
+        server_send_message(args -> sockets_array[0], 17, message_1);
+        server_send_message(args -> sockets_array[1], 17, message_1);
+      }
+      else
+      {
+        //send msgcode = 20
       }
       numero_intento++;
 
@@ -154,6 +158,11 @@ void *game_function(void *arguments) {
           
         }
       } 
+      else if(id == 17)
+      {
+        server_send_message(args -> sockets_array[0], 17, message_1);
+        server_send_message(args -> sockets_array[1], 17, message_1);
+      }
       else {
         //DESCONECCION
       }
@@ -231,45 +240,71 @@ int main(int argc, char *argv[]){
   int server_socket = prepare_socket(IP, PORT);
   PlayersInfo * players_info_1= get_client(server_socket);
   printf("Se obtuvo la info del primer cliente\n");
-  int msg_code1 = server_receive_id(players_info_1->socket_c1);
-  server_receive_payload(players_info_1->socket_c1);
-  if (msg_code1 == 1) {
-    server_send_message(players_info_1->socket_c1, 2, empty_message);
-    server_send_message(players_info_1->socket_c1, 3, empty_message);
-  }
-  else {
-    printf("Error en el cliente\n");
-  }
-  msg_code1 = server_receive_id(players_info_1->socket_c1);
-  
-  if (msg_code1 == 4) {
-    NICK1 = server_receive_payload(players_info_1->socket_c1);
-    printf("Nickname 1: %s\n", NICK1);
-  }
-  else {
-    printf("Error en el cliente\n");
-  }
-  
-  
 
+  int msg_code1;
+  while(1)
+  {
+    msg_code1 = server_receive_id(players_info_1->socket_c1);
+    if (msg_code1 == 1) {
+      server_receive_payload(players_info_1->socket_c1);
+      server_send_message(players_info_1->socket_c1, 2, empty_message);
+      server_send_message(players_info_1->socket_c1, 3, empty_message);
+      break;
+    }
+    else{
+      server_receive_payload(players_info_1->socket_c1);
+      server_send_message(players_info_1->socket_c1, 20, empty_message);
+      printf("Error en el cliente\n");
+    }
+  }
+  while(1)
+  {
+    msg_code1 = server_receive_id(players_info_1->socket_c1);
+    if (msg_code1 == 4) {
+      NICK1 = server_receive_payload(players_info_1->socket_c1);
+      printf("Nickname 1: %s\n", NICK1);
+      break;
+    }
+    else {
+      server_receive_payload(players_info_1->socket_c1);
+      server_send_message(players_info_1->socket_c1, 20, empty_message);
+      printf("Error en el cliente\n");
+    }
+  }
+  
   //Se obtiene el socket del segundo cliente
   PlayersInfo * players_info_2 = get_client(server_socket);
   printf("Se obtuvo la info del segundo cliente\n");
-  int msg_code2 = server_receive_id(players_info_2->socket_c1);
-  server_receive_payload(players_info_2->socket_c1);
-  if (msg_code2 == 1) {
-    server_send_message(players_info_2->socket_c1, 2, empty_message);
-    server_send_message(players_info_2->socket_c1, 3, empty_message);  }
-  else {
-    printf("Error en el cliente\n");
+  int msg_code2;
+  
+  while(1)
+  {
+    msg_code2 = server_receive_id(players_info_2->socket_c1);
+    if (msg_code2 == 1) {
+      server_receive_payload(players_info_2->socket_c1);
+      server_send_message(players_info_2->socket_c1, 2, empty_message);
+      server_send_message(players_info_2->socket_c1, 3, empty_message); 
+      break;
+    }
+    else {
+      server_receive_payload(players_info_2->socket_c1);
+      server_send_message(players_info_2->socket_c1, 20, empty_message);
+      printf("Error en el cliente\n");
+    }
   }
+  while(1)
+  {
   msg_code2 = server_receive_id(players_info_2->socket_c1);
   if (msg_code2 == 4) {
     NICK2 = server_receive_payload(players_info_2->socket_c1);
     printf("Nickname 2: %s\n", NICK2);
+    break;
   }
   else {
+    server_receive_payload(players_info_2->socket_c1);
+    server_send_message(players_info_2->socket_c1, 20, empty_message);
     printf("Error en el cliente\n");
+  }
   }
 
 
@@ -389,13 +424,39 @@ int main(int argc, char *argv[]){
       int response_1;
       int response_2;
 
-      server_receive_id(players_info_1->socket_c1);
-      server_receive_id(players_info_2->socket_c1);
-
-      response_payload_1 = server_receive_payload(sockets_array[0]);
-      response_payload_2 = server_receive_payload(sockets_array[1]);
-      response_1 = response_payload_1[0];
-      response_2 = response_payload_2[0];
+      int msg_code;
+      while(1)
+      { 
+        msg_code = server_receive_id(players_info_1->socket_c1);
+        if(msg_code == 16)
+        {
+          response_payload_1 = server_receive_payload(sockets_array[0]);
+          response_1 = response_payload_1[0];
+          break;
+        }
+        else
+        {
+          server_receive_payload(sockets_array[0]);
+          server_send_message(players_info_1->socket_c1, 20, empty_message);
+          printf("Error en el cliente\n");
+        }
+      }
+      while(1)
+      { 
+        msg_code = server_receive_id(players_info_2->socket_c1);
+        if(msg_code == 16)
+        {
+          response_payload_2 = server_receive_payload(sockets_array[1]);
+          response_2 = response_payload_2[0];
+          break;
+        }
+        else
+        {
+          server_receive_payload(sockets_array[1]);
+          server_send_message(players_info_2->socket_c1, 20, empty_message);
+          printf("Error en el cliente\n");
+        }
+      }
       printf("response 1: %d\n", response_1);
       printf("response 2: %d\n", response_2);
 
