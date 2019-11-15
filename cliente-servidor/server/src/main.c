@@ -107,7 +107,8 @@ void *game_function(void *arguments) {
       }
       else
       {
-        //send msgcode = 20
+        numero_intento--;
+        server_send_message(args -> sockets_array[0], 20, message_1);
       }
       numero_intento++;
 
@@ -164,7 +165,8 @@ void *game_function(void *arguments) {
         server_send_message(args -> sockets_array[1], 17, message_1);
       }
       else {
-        //send msgcode = 20
+        numero_intento--;
+        server_send_message(args -> sockets_array[0], 20, message_1);
       }
       numero_intento++;
 

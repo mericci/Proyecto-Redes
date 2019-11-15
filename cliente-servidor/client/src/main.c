@@ -162,6 +162,7 @@ int main (int argc, char *argv[]){
   int play;
   play = 1;
   
+  
   while(play)
   {
     printf("1) Comenzar juego\n");
