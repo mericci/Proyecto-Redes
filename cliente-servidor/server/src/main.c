@@ -109,6 +109,7 @@ void *game_function(void *arguments) {
       {
         numero_intento--;
         server_send_message(args -> sockets_array[0], 20, message_1);
+        server_send_cards(args ->sockets_array[0], args->cards);
       }
       numero_intento++;
 
@@ -166,7 +167,8 @@ void *game_function(void *arguments) {
       }
       else {
         numero_intento--;
-        server_send_message(args -> sockets_array[0], 20, message_1);
+        server_send_message(args -> sockets_array[1], 20, message_1);
+        server_send_cards(args ->sockets_array[1], args->cards);
       }
       numero_intento++;
 
