@@ -348,7 +348,10 @@ int main (int argc, char *argv[]){
           int winner_id = message[0];
           if (winner_id == id) {
             printf("Ganaste la partida\n");
-          } else {
+          } else if (winner_id == 0) {
+            printf("Empate\n");
+          }
+          else {
             printf("Perdiste la partida\n");
           }
         }

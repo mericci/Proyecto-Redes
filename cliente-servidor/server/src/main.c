@@ -410,12 +410,15 @@ int main(int argc, char *argv[]){
       int winner_id = 0;
 
       if (score_player1 > score_player2) {
-        winner_id = score_player1;
+        winner_id = 1;
       }
       else if (score_player2 > score_player1) {
-        winner_id = score_player2;
+        winner_id = 2;
       }
       message_1[0] = winner_id;
+      printf("score player 1: %d\n", score_player1);
+      printf("score player 2: %d\n", score_player2);
+      printf("winner_id: %d\n", winner_id);
       server_send_message(sockets_array[0], 14, message_1);
       server_send_message(sockets_array[1], 14, message_1);
 
@@ -423,7 +426,6 @@ int main(int argc, char *argv[]){
       server_send_message(sockets_array[1], 15, message_1);
       char * response_payload_1;
       char * response_payload_2;
-      //printf("ACA\n");
 
       int response_1;
       int response_2;
@@ -468,6 +470,8 @@ int main(int argc, char *argv[]){
       if ((response_1 == 1) && (response_2 == 1)) {
         game_start++;
         round = 1;
+        score_player1 = 0;
+        score_player2 = 0;
       }
       else{
         server_send_message(sockets_array[0], 17, message_1);
