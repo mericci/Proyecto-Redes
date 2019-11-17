@@ -1,0 +1,66 @@
+[17-11-2019 16:27:10] [SERVER] [SETUP] socket creation succeded.
+[17-11-2019 16:27:10] [SERVER] [CONNECTION] starting connections
+[17-11-2019 16:27:16] [SERVER] [PKGE IN] AskConnection received.  Package: 1 0
+[17-11-2019 16:27:16] [SERVER] [PKGE OUT] ConnectionEstablished sended to socket  4 Package: 2 0 
+[17-11-2019 16:27:16] [SERVER][PKGE OUT] AskNickname sended to socket  4 Package: 3 0
+[17-11-2019 16:27:17] [SERVER][PKGE IN] ReturnNickname received from socket  4 Package: 4 3 asd
+[17-11-2019 16:27:19] [SERVER] [PKGE IN] AskConnection received from socket  Package: 1 0
+[17-11-2019 16:27:19] [SERVER] [PKGE OUT] ConnectionEstablished sended to socket  5 Package: 2 0 
+[17-11-2019 16:27:19] [SERVER][PKGE OUT] AskNickname sended to socket  5 Package: 3 0
+[17-11-2019 16:27:20] [SERVER][PKGE IN] ReturnNickname received from socket  5 Package: 4 3 dsa
+[17-11-2019 16:27:20] [SERVER][PKGE OUT] Oponent Found sended to socket  4 Package: 5 3 dsa
+[17-11-2019 16:27:20] [SERVER][PKGE OUT] Oponent Found sended to socket  5 Package: 5 3 asd
+[17-11-2019 16:27:20] [SERVER][PKGE OUT] SendIDs sended to socket  4 Package: 6 1 1 
+[17-11-2019 16:27:20] [SERVER][PKGE OUT] SendIDs sended to socket  5 Package: 6 1 2 
+[17-11-2019 16:27:20] [SERVER][PKGE OUT] Start Game sended to both players  $s Package: 7 1 5
+[17-11-2019 16:27:20] [SERVER] [PKGE OUT] Sended Score to socket  5. 8 2 0 0
+ [17-11-2019 16:27:20] [SERVER] [PKGE OUT] Sended card to socket 5 Package 9 174 5 ANDAR 5 4 JUDO 5 6 CONCON 4 8 GUITARRA 11 9 COIHAIQUE 9 4 EDAD 15 5 VIAJE 13 8 ELEMENTO 4 9 FORMACION 9 4 ZONA 5 8 TRABAJAR 1 9 SIGUIENTE 5 9 PRIMAVERA 3 8 DECISION 6 4 JUDO 15 7 NETFLIX 10 6 CASTRO 5 8 GIMNASIO 1 9 RESULTADO 0 4 IRIS 2 
+[17-11-2019 16:27:20] [SERVER] [PKGE OUT] Sended score to socket  4. 8 2 0 0
+ [17-11-2019 16:27:20] [SERVER] [PKGE OUT] Sended card to socket 4 Package 9 174 5 ANDAR 5 4 JUDO 5 6 CONCON 4 8 GUITARRA 11 9 COIHAIQUE 9 4 EDAD 15 5 VIAJE 13 8 ELEMENTO 4 9 FORMACION 9 4 ZONA 5 8 TRABAJAR 1 9 SIGUIENTE 5 9 PRIMAVERA 3 8 DECISION 6 4 JUDO 15 7 NETFLIX 10 6 CASTRO 5 8 GIMNASIO 1 9 RESULTADO 0 4 IRIS 2 
+[17-11-2019 16:27:26] [SERVER] [PKGE IN] Answer from socket  4 Package 10 ds
+[17-11-2019 16:27:30] [SERVER] [PKGE IN] Answer from socket  4 Package 10 JUDO
+[17-11-2019 16:27:30] [SERVER] [PKGE OUT] ResponseWord sended to socket  4 Package: 11 2 1 1
+[17-11-2019 16:27:34] [SERVER] [PKGE IN] Answer from socket  4 Package 10 JUDO
+[17-11-2019 16:27:34] [SERVER] [PKGE OUT] ResponseWord sended to socket  4 Package: 11 2 1 2
+[17-11-2019 16:27:34] [SERVER] [PKGE OUT] Round Winner/Looser sended to both players Package: 12 1 1 4 Package: 11 2 -96 -100
+[17-11-2019 16:27:34] [SERVER] [PKGE OUT] Sended score to socket  4. 8 2 5 3
+[17-11-2019 16:27:34] [SERVER] [PKGE OUT] Sended Score to socket  5. 8 2 3 5
+ [17-11-2019 16:27:34] [SERVER] [PKGE OUT] Sended card to socket 4 Package 9 189 10 COLLIPULLI 7 6 INGLES 1 10 LUXEMBURGO 7 6 JABALI 13 10 COMPUTADOR 2 6 OSORNO 8 7 HORMIGA 4 9 CARRETERA 8 10 HUECHURABA 1 8 MECANICO 2 9 TALAGANTE 8 6 OSORNO 9 6 PIERNA 1 6 TEATRO 1 8 PORTUGAL 0 5 PUCON 12 8 DOMINICA 0 7 GERANIO 8 5 AYUDA 0 7 GALLINA 1 
+ [17-11-2019 16:27:34] [SERVER] [PKGE OUT] Sended card to socket 5 Package 9 189 10 COLLIPULLI 7 6 INGLES 1 10 LUXEMBURGO 7 6 JABALI 13 10 COMPUTADOR 2 6 OSORNO 8 7 HORMIGA 4 9 CARRETERA 8 10 HUECHURABA 1 8 MECANICO 2 9 TALAGANTE 8 6 OSORNO 9 6 PIERNA 1 6 TEATRO 1 8 PORTUGAL 0 5 PUCON 12 8 DOMINICA 0 7 GERANIO 8 5 AYUDA 0 7 GALLINA 1 
+[17-11-2019 16:27:49] [SERVER] [PKGE IN] Answer from socket  4 Package 10 OSORNO
+[17-11-2019 16:27:49] [SERVER] [PKGE OUT] ResponseWord sended to socket  4 Package: 11 2 1 2
+[17-11-2019 16:27:53] [SERVER] [PKGE IN] Answer from socket  4 Package 10 OSORNO
+[17-11-2019 16:27:53] [SERVER] [PKGE OUT] ResponseWord sended to socket  4 Package: 11 2 1 2
+[17-11-2019 16:27:53] [SERVER] [PKGE OUT] Round Winner/Looser sended to both players Package: 12 1 1 4 Package: 11 2 -96 -100
+[17-11-2019 16:27:53] [SERVER] [PKGE OUT] Sended Score to socket  5. 8 2 8 10
+ [17-11-2019 16:27:53] [SERVER] [PKGE OUT] Sended card to socket 5 Package 9 175 8 BIRMANIA 11 5 MARZO 10 6 BLANCO 2 7 DERECHO 5 9 ESCORPION 8 7 CABRERO 5 6 VOLVER 11 6 CIERVO 5 7 RANQUIL 10 5 FAVOR 11 8 MOLDAVIA 7 6 SANGRE 9 7 FIREFOX 6 6 BLANCO 3 8 ELEFANTE 1 8 CONDUCIR 5 5 CATAR 13 7 SISTEMA 5 6 TORTEL 2 8 TELEGRAM 5 
+[17-11-2019 16:27:53] [SERVER] [PKGE OUT] Sended score to socket  4. 8 2 10 8
+ [17-11-2019 16:27:53] [SERVER] [PKGE OUT] Sended card to socket 4 Package 9 175 8 BIRMANIA 11 5 MARZO 10 6 BLANCO 2 7 DERECHO 5 9 ESCORPION 8 7 CABRERO 5 6 VOLVER 11 6 CIERVO 5 7 RANQUIL 10 5 FAVOR 11 8 MOLDAVIA 7 6 SANGRE 9 7 FIREFOX 6 6 BLANCO 3 8 ELEFANTE 1 8 CONDUCIR 5 5 CATAR 13 7 SISTEMA 5 6 TORTEL 2 8 TELEGRAM 5 
+[17-11-2019 16:27:59] [SERVER] [PKGE IN] Answer from socket  4 Package 10 BLANCO
+[17-11-2019 16:27:59] [SERVER] [PKGE OUT] ResponseWord sended to socket  4 Package: 11 2 1 2
+[17-11-2019 16:28:2] [SERVER] [PKGE IN] Answer from socket  4 Package 10 BLANCO
+[17-11-2019 16:28:2] [SERVER] [PKGE OUT] ResponseWord sended to socket  4 Package: 11 2 1 2
+[17-11-2019 16:28:2] [SERVER] [PKGE OUT] Round Winner/Looser sended to both players Package: 12 1 1 4 Package: 11 2 -96 -100
+[17-11-2019 16:28:2] [SERVER] [PKGE OUT] Sended score to socket  4. 8 2 15 13
+[17-11-2019 16:28:2] [SERVER] [PKGE OUT] Sended Score to socket  5. 8 2 13 15
+ [17-11-2019 16:28:2] [SERVER] [PKGE OUT] Sended card to socket 4 Package 9 178 7 GEORGIA 12 5 MAIPU 9 10 ESCARABAJO 9 9 CARTAGENA 0 7 VANUATU 2 5 GALLO 8 9 MELIPILLA 6 6 ACCION 3 4 MAYO 2 6 NUMERO 9 8 SNAPCHAT 1 10 TRABAJADOR 5 10 CONDUCTORA 3 7 OPINION 0 5 FUEGO 0 4 TORO 4 8 MANTENER 2 7 IQUIQUE 6 6 MILLON 0 5 MAIPU 0 
+ [17-11-2019 16:28:2] [SERVER] [PKGE OUT] Sended card to socket 5 Package 9 178 7 GEORGIA 12 5 MAIPU 9 10 ESCARABAJO 9 9 CARTAGENA 0 7 VANUATU 2 5 GALLO 8 9 MELIPILLA 6 6 ACCION 3 4 MAYO 2 6 NUMERO 9 8 SNAPCHAT 1 10 TRABAJADOR 5 10 CONDUCTORA 3 7 OPINION 0 5 FUEGO 0 4 TORO 4 8 MANTENER 2 7 IQUIQUE 6 6 MILLON 0 5 MAIPU 0 
+[17-11-2019 16:28:7] [SERVER] [PKGE IN] Answer from socket  4 Package 10 MAIPU
+[17-11-2019 16:28:7] [SERVER] [PKGE OUT] ResponseWord sended to socket  4 Package: 11 2 1 2
+[17-11-2019 16:28:11] [SERVER] [PKGE IN] Answer from socket  4 Package 10 MAIPU
+[17-11-2019 16:28:11] [SERVER] [PKGE OUT] ResponseWord sended to socket  4 Package: 11 2 1 2
+[17-11-2019 16:28:11] [SERVER] [PKGE OUT] Round Winner/Looser sended to both players Package: 12 1 1 4 Package: 11 2 -96 -100
+[17-11-2019 16:28:11] [SERVER] [PKGE OUT] Sended score to socket  4. 8 2 20 18
+[17-11-2019 16:28:11] [SERVER] [PKGE OUT] Sended Score to socket  5. 8 2 18 20
+ [17-11-2019 16:28:11] [SERVER] [PKGE OUT] Sended card to socket 5 Package 9 162 5 ANDAR 12 6 MONACO 3 8 ISLANDIA 10 5 BARBA 0 9 PUNITAQUI 1 5 ABRIR 9 5 TIRUA 1 7 CONOCER 11 6 SALTAR 12 6 RETIRO 11 7 AUSTRIA 12 6 GRECIA 6 5 LANCO 13 7 CAMERUN 5 5 PAINE 2 4 IRIS 1 7 RANQUIL 8 8 COLTAUCO 5 6 RIESGO 8 5 TIRUA 3 
+ [17-11-2019 16:28:11] [SERVER] [PKGE OUT] Sended card to socket 4 Package 9 162 5 ANDAR 12 6 MONACO 3 8 ISLANDIA 10 5 BARBA 0 9 PUNITAQUI 1 5 ABRIR 9 5 TIRUA 1 7 CONOCER 11 6 SALTAR 12 6 RETIRO 11 7 AUSTRIA 12 6 GRECIA 6 5 LANCO 13 7 CAMERUN 5 5 PAINE 2 4 IRIS 1 7 RANQUIL 8 8 COLTAUCO 5 6 RIESGO 8 5 TIRUA 3 
+[17-11-2019 16:28:16] [SERVER] [PKGE IN] Answer from socket  4 Package 10 TIRUA
+[17-11-2019 16:28:16] [SERVER] [PKGE OUT] ResponseWord sended to socket  4 Package: 11 2 1 2
+[17-11-2019 16:28:21] [SERVER] [PKGE IN] Answer from socket  4 Package 10 TIRUA
+[17-11-2019 16:28:21] [SERVER] [PKGE OUT] ResponseWord sended to socket  4 Package: 11 2 1 2
+[17-11-2019 16:28:21] [SERVER] [PKGE OUT] Round Winner/Looser sended to both players Package: 12 1 1 4 Package: 11 2 -96 -100
+[17-11-2019 16:28:21] [SERVER] [PKGE OUT] Game Ended sended to both players Package: 13 1 1 4 Package: 11 2 -96 -100
+[17-11-2019 16:28:21] [SERVER] [PKGE OUT] Game Winner/Looser sended to both players Package: 14 1 1
+[17-11-2019 16:28:21] [SERVER] [PKGE OUT] AskNewGame sended to both players Package: 15 0
+[17-11-2019 16:28:30] [SERVER] [PKGE IN] AnswerNewGame received from socket  4 Package 16 1 0
+[17-11-2019 16:28:30] [SERVER] [PKGE IN] AnswerNewGame received from socket  5 Package 16 1 0
