@@ -10,6 +10,7 @@ int ROUND_SCORE_1;
 int ROUND_SCORE_2;
 int FINISHED_1 = 0;
 int FINISHED_2 = 0;
+int L_FLAG = 0;
 
 void dobble(int sockets_array[2])
 {
@@ -40,6 +41,8 @@ void dobble(int sockets_array[2])
   server_send_message(sockets_array[1], 7, juego8);
 }
 
+
+
 struct arg_struct {
     int client_socket;
     int sockets_array[2];
@@ -49,6 +52,140 @@ struct arg_struct {
     unsigned char * cards;
     char * answer;
 };
+
+
+
+void cards_log(unsigned char * cards) {
+
+}
+
+void record_in_log(int package_in, int messageId, char* payload){
+  if (L_FLAG == 0) {
+    return;
+  }
+  char * message;
+  if (package_in == 0) {
+    message = "[PKGE OUT]";
+  } else {
+    message = "[PKGE IN]";
+  }
+    int year, month, day, hour, minute, second;
+    time_t now = time(0);
+    struct tm *actual_time = localtime(&now);
+    year = actual_time -> tm_year + 1900; //Segun man de localtime, debiera ser el año desde 1900, pero aca es desde 1815.
+    month = actual_time -> tm_mon + 1;
+    day = actual_time -> tm_mday;
+    hour = actual_time -> tm_hour;
+    minute = actual_time -> tm_min;
+    second = actual_time -> tm_sec;
+
+    FILE * fp;
+    fp = fopen("log.txt", "a");
+    if(messageId == 0){
+        fprintf(fp, "[%d-%d-%d %d:%d:%d] %s\n",
+        day,month,year,hour,minute,second, message);
+    }
+    if(messageId == 1){
+      //START CONNECTION
+        fprintf(fp, "[%d-%d-%d %d:%d:%d] %s ID: 1 Size: 0\n",
+        day,month,year,hour,minute,second, message);
+    }
+    if(messageId == 2){
+      //CONNECTION ESTABLISHED
+        fprintf(fp, "[%d-%d-%d %d:%d:%d] %s ID: 2 Size: 0 \n",
+        day,month,year,hour,minute,second, message);
+    }
+    if(messageId == 3){
+      //ASK NICKNAME
+        fprintf(fp, "[%d-%d-%d %d:%d:%d] %s ID: 3 Size: 0\n",
+        day,month,year,hour,minute,second, message);
+    }
+    if(messageId == 4){
+      //RETURN NICKNAME
+      int size = strlen(payload);
+      fprintf(fp, "[%d-%d-%d %d:%d:%d] %s ID: 4 Size: %d Payload: %s\n",
+        day,month,year,hour,minute,second, message, size, payload);
+    }
+    if(messageId == 5){
+      //OPPONENT FOUND
+      int size = strlen(payload);
+      fprintf(fp, "[%d-%d-%d %d:%d:%d] %s ID: 5 Size: %d Payload: %s\n",
+        day,month,year,hour,minute,second, message, size, payload);
+    }
+    if(messageId == 6){
+      //SEND IDs
+      int id = payload[0];
+      fprintf(fp, "[%d-%d-%d %d:%d:%d] %s ID: 6 Size: 1 Payload: %d \n",
+        day,month,year,hour,minute,second, message, id);
+    }
+    if(messageId == 7){
+      //START GAME
+      int game_number = payload[0];
+      fprintf(fp, "[%d-%d-%d %d:%d:%d] %s ID: 7 Size: 1 Payload: %d\n",
+        day,month,year,hour,minute,second, message, game_number);
+    }
+    if(messageId == 8){
+      //SCORES
+      int score_1 = payload[0];
+      int score_2 = payload[1];
+      fprintf(fp, "[%d-%d-%d %d:%d:%d] %s ID: 8 Size: 2 Payload: %d%d\n",
+        day,month,year,hour,minute,second, message, score_1 ,score_2);
+    }
+    if(messageId == 10){
+      //SEND WORD
+      int size = strlen(payload);
+      fprintf(fp, "[%d-%d-%d %d:%d:%d] %s ID: 10 Size: %d Payload: %s\n",
+        day,month,year,hour,minute,second, message, size, payload);
+    }
+    if(messageId == 11){
+      //RESPONSE WORD
+      int response = payload[0];
+      int remaining_attempts = payload[1];
+      fprintf(fp, "[%d-%d-%d %d:%d:%d] %s ID: 11 Size: 2 Payload: %d%d\n",
+        day,month,year,hour,minute,second, message, response, remaining_attempts);
+    }
+    if(messageId == 12){
+      //ROUND WINNER/LOOSER
+      int winner_id = payload[0];
+      fprintf(fp, "[%d-%d-%d %d:%d:%d] %s ID: 12 Size: 1 Payload: %d\n",
+        day,month,year,hour,minute,second, message, winner_id);
+    }
+    if(messageId == 13){
+      //END GAME
+      int game_number = payload[0];
+      fprintf(fp, "[%d-%d-%d %d:%d:%d] %s ID: 13 Size: 1 Payload: %d\n",
+        day,month,year,hour,minute,second, message, game_number);
+    }
+    if(messageId == 14){
+      //GAME WINNER/LOOSER
+      int winner_id = payload[0];
+      fprintf(fp, "[%d-%d-%d %d:%d:%d] %s ID: 14 Size: 1 Payload: %d\n",
+        day,month,year,hour,minute,second, message, winner_id);
+    }
+    if(messageId == 15){
+      //ASK NEW GAME
+      fprintf(fp, "[%d-%d-%d %d:%d:%d] %s ID: 15 Size: 0\n",
+        day,month,year,hour,minute,second, message);
+    }
+    if(messageId == 16){
+      //ANSWER NEW GAME
+      int answer = payload[0];
+        fprintf(fp, "[%d-%d-%d %d:%d:%d] %s ID: 16 Size: 1 Payload: %d\n",
+        day,month,year,hour,minute,second, message, answer);
+    }
+    if(messageId == 17){
+      //DISCONNECT
+      fprintf(fp, "[%d-%d-%d %d:%d:%d] %s ID: 17 Size: 0\n",
+        day,month,year,hour,minute,second, message);
+    }
+    if (messageId == 20) {
+      //ERROR BAD PACKAGE
+      fprintf(fp, "[%d-%d-%d %d:%d:%d] %s ID: 20 Size: 0\n",
+        day,month,year,hour,minute,second, message);
+    }
+    fclose(fp);
+
+}
 
 void *game_function(void *arguments) {
 
@@ -65,7 +202,9 @@ void *game_function(void *arguments) {
     message_2[0] = args->score_player1;
     message_2[1] = args->score_player2;
     server_send_message_2bytes(args->sockets_array[0], 8, message_2);
+    record_in_log(0, 8, message_2);
     server_send_cards(args->sockets_array[0], args->cards);
+    record_in_log(0, 9, args->cards);
     int numero_intento = 1;
     char * response;
     ROUND_SCORE_1 = 0;
@@ -74,6 +213,7 @@ void *game_function(void *arguments) {
       if (id == 10) {
         //SEND WORD
         response = server_receive_payload(args->sockets_array[0]);
+        record_in_log(1, 10, response);
         if (strcmp(response, args->answer) == 0) {
           if (numero_intento == 1) {
             ROUND_SCORE_1 = 5;
@@ -87,6 +227,7 @@ void *game_function(void *arguments) {
           message_2[0] = 1;
           message_2[1] = 3 - numero_intento;
           server_send_message_2bytes(args->sockets_array[0], 11, message_2);
+          record_in_log(0, 11, message_2);
           break;
         }
         else {
@@ -96,20 +237,30 @@ void *game_function(void *arguments) {
           int intentos_restantes = 3 - numero_intento;
           message_2[1] = intentos_restantes;
           server_send_message_2bytes(args->sockets_array[0], 11, message_2);
+          record_in_log(0, 11, message_2);
           if (numero_intento < 3) {
             server_send_cards(args->sockets_array[0], args->cards);
+            record_in_log(0, 9, args->cards);
           }
         }
       } 
       else if(id == 17){
+        server_receive_payload(args->sockets_array[0]);
+        record_in_log(1, 17, message_1);
         server_send_message(args -> sockets_array[0], 17, message_1);
+        record_in_log(0, 17, message_1);
         server_send_message(args -> sockets_array[1], 17, message_1);
+        record_in_log(0, 17, message_1);
       }
       else
       {
+        server_receive_payload(args->sockets_array[0]);
+        //no se hace log porque no se confia en el mensaje y podria generar un error
         numero_intento--;
         server_send_message(args -> sockets_array[0], 20, message_1);
+        record_in_log(0, 20, message_1);
         server_send_cards(args ->sockets_array[0], args->cards);
+        record_in_log(0, 20, message_1);
       }
       numero_intento++;
 
@@ -124,7 +275,9 @@ void *game_function(void *arguments) {
     message_2[0] = args->score_player2;
     message_2[1] = args->score_player1;
     server_send_message_2bytes(args->sockets_array[1], 8, message_2);
+    record_in_log(0, 8, message_2);
     server_send_cards(args->sockets_array[1], args->cards);
+    record_in_log(0, 9, args->cards);
     int numero_intento = 1;
     char * response;
     ROUND_SCORE_2 = 0;
@@ -133,6 +286,7 @@ void *game_function(void *arguments) {
       if (id == 10) {
         //SEND WORD
         response = server_receive_payload(args->sockets_array[1]);
+        record_in_log(1, 10, response);
         if (strcmp(response, args->answer) == 0) {
           if (numero_intento == 1) {
             ROUND_SCORE_2 = 5;
@@ -146,6 +300,7 @@ void *game_function(void *arguments) {
           message_2[0] = 1;
           message_2[1] = 3 - numero_intento;
           server_send_message_2bytes(args->sockets_array[1], 11, message_2);
+          record_in_log(0, 11, message_2);
           break;
 
         }
@@ -154,21 +309,29 @@ void *game_function(void *arguments) {
           message_2[0] = 0;
           message_2[1] = 3 - numero_intento;
           server_send_message_2bytes(args->sockets_array[1], 11, message_2);
+          record_in_log(0, 11, message_2);
           if (numero_intento < 3) {
             server_send_cards(args->sockets_array[1], args->cards);
+            record_in_log(0, 9, args->cards);
           }
           
         }
       } 
       else if(id == 17)
       {
+        server_receive_payload(args->sockets_array[1]);
+        record_in_log(1, 17, message_1);
         server_send_message(args -> sockets_array[0], 17, message_1);
+        record_in_log(0, 17, message_1);
         server_send_message(args -> sockets_array[1], 17, message_1);
+        record_in_log(0, 17, message_1);
       }
       else {
         numero_intento--;
         server_send_message(args -> sockets_array[1], 20, message_1);
+        record_in_log(0, 20, message_1);
         server_send_cards(args ->sockets_array[1], args->cards);
+        record_in_log(0, 20, message_1);
       }
       numero_intento++;
 
@@ -188,7 +351,6 @@ int main(int argc, char *argv[]){
   char * IP;
   int PORT;
 
-  int L_FLAG = 0;
   if (argc == 6) {
     //tiene l flag
 
@@ -251,13 +413,17 @@ int main(int argc, char *argv[]){
     msg_code1 = server_receive_id(players_info_1->socket_c1);
     if (msg_code1 == 1) {
       server_receive_payload(players_info_1->socket_c1);
+      record_in_log(1, 1, empty_message);
       server_send_message(players_info_1->socket_c1, 2, empty_message);
+      record_in_log(0, 2, empty_message);
       server_send_message(players_info_1->socket_c1, 3, empty_message);
+      record_in_log(0, 3, empty_message);
       break;
     }
     else{
       server_receive_payload(players_info_1->socket_c1);
       server_send_message(players_info_1->socket_c1, 20, empty_message);
+      record_in_log(0, 20, empty_message);
       printf("Error en el cliente\n");
     }
   }
@@ -266,12 +432,14 @@ int main(int argc, char *argv[]){
     msg_code1 = server_receive_id(players_info_1->socket_c1);
     if (msg_code1 == 4) {
       NICK1 = server_receive_payload(players_info_1->socket_c1);
+      record_in_log(1, 4, NICK1);
       printf("Nickname 1: %s\n", NICK1);
       break;
     }
     else {
       server_receive_payload(players_info_1->socket_c1);
       server_send_message(players_info_1->socket_c1, 20, empty_message);
+      record_in_log(0, 20, empty_message);
       printf("Error en el cliente\n");
     }
   }
@@ -286,13 +454,17 @@ int main(int argc, char *argv[]){
     msg_code2 = server_receive_id(players_info_2->socket_c1);
     if (msg_code2 == 1) {
       server_receive_payload(players_info_2->socket_c1);
+      record_in_log(1, 1, empty_message);
       server_send_message(players_info_2->socket_c1, 2, empty_message);
+      record_in_log(0, 2, empty_message);
       server_send_message(players_info_2->socket_c1, 3, empty_message); 
+      record_in_log(0, 3, empty_message);
       break;
     }
     else {
       server_receive_payload(players_info_2->socket_c1);
       server_send_message(players_info_2->socket_c1, 20, empty_message);
+      record_in_log(0, 20, empty_message);
       printf("Error en el cliente\n");
     }
   }
@@ -301,12 +473,14 @@ int main(int argc, char *argv[]){
   msg_code2 = server_receive_id(players_info_2->socket_c1);
   if (msg_code2 == 4) {
     NICK2 = server_receive_payload(players_info_2->socket_c1);
+    record_in_log(1, 4, NICK2);
     printf("Nickname 2: %s\n", NICK2);
     break;
   }
   else {
     server_receive_payload(players_info_2->socket_c1);
     server_send_message(players_info_2->socket_c1, 20, empty_message);
+    record_in_log(0, 20, empty_message);
     printf("Error en el cliente\n");
   }
   }
@@ -321,15 +495,18 @@ int main(int argc, char *argv[]){
 
 
   server_send_message(sockets_array[0], 5, NICK2); //enviamos nombre del contrincante
+  record_in_log(0, 5, NICK2);
   server_send_message(sockets_array[1], 5, NICK1); // enviamos nombre del contrincante
+  record_in_log(0, 5, NICK1);
   
   //envio los ids
   char * message_1 = malloc(sizeof(char));
-  char * message_2 = malloc(sizeof(char) * 2);
   message_1[0] = 1;
   server_send_message(sockets_array[0], 6, message_1);
+  record_in_log(0, 6, message_1);
   message_1[0] = 2;
   server_send_message(sockets_array[1], 6, message_1);
+  record_in_log(0, 6, message_1);
 
   //COMIENZA EL JUEGO
 
@@ -343,7 +520,9 @@ int main(int argc, char *argv[]){
     if (round == 1) {
       message_1[0] = game_start;
       server_send_message(sockets_array[0], 7, message_1);
+      record_in_log(0, 7, message_1);
       server_send_message(sockets_array[1], 7, message_1);
+      record_in_log(0, 7, message_1);
     }
     
 
@@ -395,9 +574,12 @@ int main(int argc, char *argv[]){
     char * round_winner_message = malloc(sizeof(char));
     round_winner_message[0] = round_winner_id;
     server_send_message(sockets_array[0], 12, round_winner_message);
+    record_in_log(0, 12, round_winner_message);
     server_send_message(sockets_array[1], 12, round_winner_message);
+    record_in_log(0, 12, round_winner_message);
     ROUND_SCORE_1 = 0;
     ROUND_SCORE_2 = 0;
+    free(round_winner_message);
 
         
 
@@ -406,7 +588,9 @@ int main(int argc, char *argv[]){
     if (round > 5) {
       message_1[0] = game_start;
       server_send_message(sockets_array[0], 13, message_1);
+      record_in_log(0, 13, message_1);
       server_send_message(sockets_array[1], 13, message_1);
+      record_in_log(0, 13, message_1);
       int winner_id = 0;
 
       if (score_player1 > score_player2) {
@@ -420,10 +604,15 @@ int main(int argc, char *argv[]){
       printf("score player 2: %d\n", score_player2);
       printf("winner_id: %d\n", winner_id);
       server_send_message(sockets_array[0], 14, message_1);
+      record_in_log(0, 14, message_1);
       server_send_message(sockets_array[1], 14, message_1);
+      record_in_log(0, 14, message_1);
 
       server_send_message(sockets_array[0], 15, message_1);
+      record_in_log(0, 15, message_1);
       server_send_message(sockets_array[1], 15, message_1);
+      record_in_log(0, 15, message_1);
+
       char * response_payload_1;
       char * response_payload_2;
 
@@ -437,6 +626,7 @@ int main(int argc, char *argv[]){
         if(msg_code == 16)
         {
           response_payload_1 = server_receive_payload(sockets_array[0]);
+          record_in_log(1, 16, response_payload_1);
           response_1 = response_payload_1[0];
           break;
         }
@@ -444,6 +634,7 @@ int main(int argc, char *argv[]){
         {
           server_receive_payload(sockets_array[0]);
           server_send_message(players_info_1->socket_c1, 20, empty_message);
+          record_in_log(0, 20, empty_message);
           printf("Error en el cliente\n");
         }
       }
@@ -453,6 +644,7 @@ int main(int argc, char *argv[]){
         if(msg_code == 16)
         {
           response_payload_2 = server_receive_payload(sockets_array[1]);
+          record_in_log(1, 16, response_payload_2);
           response_2 = response_payload_2[0];
           break;
         }
@@ -460,6 +652,7 @@ int main(int argc, char *argv[]){
         {
           server_receive_payload(sockets_array[1]);
           server_send_message(players_info_2->socket_c1, 20, empty_message);
+          record_in_log(0, 20, empty_message);
           printf("Error en el cliente\n");
         }
       }
@@ -475,7 +668,9 @@ int main(int argc, char *argv[]){
       }
       else{
         server_send_message(sockets_array[0], 17, message_1);
+        record_in_log(0, 17, message_1);
         server_send_message(sockets_array[1], 17, message_1);
+        record_in_log(0, 17, message_1);
         break;
       }
 
@@ -484,12 +679,11 @@ int main(int argc, char *argv[]){
 
   }
 
-  
+  free(message_1);
+
   
 
-  while(1) {
-    usleep(30000);
-  }
+  
 
   
 
