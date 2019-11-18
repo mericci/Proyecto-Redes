@@ -55,7 +55,25 @@ struct arg_struct {
 
 
 
-void cards_log(unsigned char * cards) {
+void cards_log(FILE* fp, unsigned char * cards) {
+  int size = cards[1];
+  fprintf(fp, "Size: %d Payload: ", size);
+  int current_position = 2;
+  int word_index = 0;
+  while (word_index < 20) {
+    int word_length = cards[current_position];
+    fprintf(fp, "%d", word_length);
+    current_position++;
+    for (int i = 0; i < word_length; i++) {
+      fprintf(fp, "%c", cards[current_position]);
+      current_position++;
+    }
+    int word_position = cards[current_position];
+    fprintf(fp, "%d", word_position);
+    current_position++;
+    word_index++;
+  }
+  fprintf(fp, "\n");
 
 }
 
@@ -87,100 +105,117 @@ void record_in_log(int package_in, int messageId, char* payload){
     }
     if(messageId == 1){
       //START CONNECTION
-        fprintf(fp, "[%d-%d-%d %d:%d:%d] %s ID: 1 Size: 0\n",
+        fprintf(fp, "[%d-%d-%d %d:%d:%d] %s Start Connection ID: 1 Size: 0\n",
         day,month,year,hour,minute,second, message);
     }
     if(messageId == 2){
       //CONNECTION ESTABLISHED
-        fprintf(fp, "[%d-%d-%d %d:%d:%d] %s ID: 2 Size: 0 \n",
+        fprintf(fp, "[%d-%d-%d %d:%d:%d] %s Connection Established ID: 2 Size: 0 \n",
         day,month,year,hour,minute,second, message);
     }
     if(messageId == 3){
       //ASK NICKNAME
-        fprintf(fp, "[%d-%d-%d %d:%d:%d] %s ID: 3 Size: 0\n",
+        fprintf(fp, "[%d-%d-%d %d:%d:%d] %s Ask Nickname ID: 3 Size: 0\n",
         day,month,year,hour,minute,second, message);
     }
     if(messageId == 4){
       //RETURN NICKNAME
       int size = strlen(payload);
-      fprintf(fp, "[%d-%d-%d %d:%d:%d] %s ID: 4 Size: %d Payload: %s\n",
+      fprintf(fp, 
+        "[%d-%d-%d %d:%d:%d] %s Return Nickname ID: 4 Size: %d Payload: %s\n",
         day,month,year,hour,minute,second, message, size, payload);
     }
     if(messageId == 5){
       //OPPONENT FOUND
       int size = strlen(payload);
-      fprintf(fp, "[%d-%d-%d %d:%d:%d] %s ID: 5 Size: %d Payload: %s\n",
+      fprintf(fp, 
+        "[%d-%d-%d %d:%d:%d] %s Opponent Found ID: 5 Size: %d Payload: %s\n",
         day,month,year,hour,minute,second, message, size, payload);
     }
     if(messageId == 6){
       //SEND IDs
       int id = payload[0];
-      fprintf(fp, "[%d-%d-%d %d:%d:%d] %s ID: 6 Size: 1 Payload: %d \n",
+      fprintf(fp, "[%d-%d-%d %d:%d:%d] %s Send IDs ID: 6 Size: 1 Payload: %d\n",
         day,month,year,hour,minute,second, message, id);
     }
     if(messageId == 7){
       //START GAME
       int game_number = payload[0];
-      fprintf(fp, "[%d-%d-%d %d:%d:%d] %s ID: 7 Size: 1 Payload: %d\n",
+      fprintf(fp, "[%d-%d-%d %d:%d:%d] %s Start Game ID: 7 Size: 1 Payload: %d\n",
         day,month,year,hour,minute,second, message, game_number);
     }
     if(messageId == 8){
       //SCORES
       int score_1 = payload[0];
       int score_2 = payload[1];
-      fprintf(fp, "[%d-%d-%d %d:%d:%d] %s ID: 8 Size: 2 Payload: %d%d\n",
+      fprintf(fp, "[%d-%d-%d %d:%d:%d] %s Scores ID: 8 Size: 2 Payload: %d%d\n",
         day,month,year,hour,minute,second, message, score_1 ,score_2);
+    }
+    if (messageId == 9) {
+      //SEND CARDS
+      fprintf(fp, "[%d-%d-%d %d:%d:%d] %s Send Cards ID: 9 ",
+        day,month,year,hour,minute,second, message);
+      cards_log(fp, payload);
     }
     if(messageId == 10){
       //SEND WORD
       int size = strlen(payload);
-      fprintf(fp, "[%d-%d-%d %d:%d:%d] %s ID: 10 Size: %d Payload: %s\n",
+      fprintf(fp,
+        "[%d-%d-%d %d:%d:%d] %s Send Word ID: 10 Size: %d Payload: %s\n",
         day,month,year,hour,minute,second, message, size, payload);
     }
     if(messageId == 11){
       //RESPONSE WORD
       int response = payload[0];
       int remaining_attempts = payload[1];
-      fprintf(fp, "[%d-%d-%d %d:%d:%d] %s ID: 11 Size: 2 Payload: %d%d\n",
+      fprintf(fp, 
+        "[%d-%d-%d %d:%d:%d] %s Response Word ID: 11 Size: 2 Payload: %d%d\n",
         day,month,year,hour,minute,second, message, response, remaining_attempts);
     }
     if(messageId == 12){
       //ROUND WINNER/LOOSER
       int winner_id = payload[0];
-      fprintf(fp, "[%d-%d-%d %d:%d:%d] %s ID: 12 Size: 1 Payload: %d\n",
+      fprintf(fp, 
+      "[%d-%d-%d %d:%d:%d] %s Round Winner/Looser ID: 12 Size: 1 Payload: %d\n",
         day,month,year,hour,minute,second, message, winner_id);
     }
     if(messageId == 13){
       //END GAME
       int game_number = payload[0];
-      fprintf(fp, "[%d-%d-%d %d:%d:%d] %s ID: 13 Size: 1 Payload: %d\n",
+      fprintf(fp, 
+        "[%d-%d-%d %d:%d:%d] %s End Game ID: 13 Size: 1 Payload: %d\n",
         day,month,year,hour,minute,second, message, game_number);
     }
     if(messageId == 14){
       //GAME WINNER/LOOSER
       int winner_id = payload[0];
-      fprintf(fp, "[%d-%d-%d %d:%d:%d] %s ID: 14 Size: 1 Payload: %d\n",
+      fprintf(fp,
+        "[%d-%d-%d %d:%d:%d] %s Game Winner/Looser ID: 14 Size: 1 Payload: %d\n",
         day,month,year,hour,minute,second, message, winner_id);
     }
     if(messageId == 15){
       //ASK NEW GAME
-      fprintf(fp, "[%d-%d-%d %d:%d:%d] %s ID: 15 Size: 0\n",
+      fprintf(fp,
+        "[%d-%d-%d %d:%d:%d] %s Ask New Game ID: 15 Size: 0\n",
         day,month,year,hour,minute,second, message);
     }
     if(messageId == 16){
       //ANSWER NEW GAME
       int answer = payload[0];
-        fprintf(fp, "[%d-%d-%d %d:%d:%d] %s ID: 16 Size: 1 Payload: %d\n",
+      fprintf(fp,
+        "[%d-%d-%d %d:%d:%d] %s Answer New Game ID: 16 Size: 1 Payload: %d\n",
         day,month,year,hour,minute,second, message, answer);
     }
     if(messageId == 17){
       //DISCONNECT
-      fprintf(fp, "[%d-%d-%d %d:%d:%d] %s ID: 17 Size: 0\n",
+      fprintf(fp,
+        "[%d-%d-%d %d:%d:%d] %s Disconnect ID: 17 Size: 0\n",
         day,month,year,hour,minute,second, message);
     }
     if (messageId == 20) {
       //ERROR BAD PACKAGE
-      fprintf(fp, "[%d-%d-%d %d:%d:%d] %s ID: 20 Size: 0\n",
+      fprintf(fp,
+        "[%d-%d-%d %d:%d:%d] %s Error Bad Package ID: 20 Size: 0\n",
         day,month,year,hour,minute,second, message);
     }
     fclose(fp);
