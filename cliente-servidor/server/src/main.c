@@ -11,6 +11,7 @@ int ROUND_SCORE_2;
 int FINISHED_1 = 0;
 int FINISHED_2 = 0;
 int L_FLAG = 0;
+int DISCONNECTED = 0;
 
 void dobble(int sockets_array[2])
 {
@@ -249,6 +250,9 @@ void *game_function(void *arguments) {
         //SEND WORD
         response = server_receive_payload(args->sockets_array[0]);
         record_in_log(1, 10, response);
+        if (DISCONNECTED == 1) {
+          break;
+        }
         if (strcmp(response, args->answer) == 0) {
           if (numero_intento == 1) {
             ROUND_SCORE_1 = 5;
@@ -286,16 +290,21 @@ void *game_function(void *arguments) {
         record_in_log(0, 17, message_1);
         server_send_message(args -> sockets_array[1], 17, message_1);
         record_in_log(0, 17, message_1);
+        DISCONNECTED = 1;
+        break;
       }
       else
       {
-        server_receive_payload(args->sockets_array[0]);
-        //no se hace log porque no se confia en el mensaje y podria generar un error
-        numero_intento--;
-        server_send_message(args -> sockets_array[0], 20, message_1);
-        record_in_log(0, 20, message_1);
-        server_send_cards(args ->sockets_array[0], args->cards);
-        record_in_log(0, 20, message_1);
+        if (DISCONNECTED == 0) {
+          server_receive_payload(args->sockets_array[0]);
+          //no se hace log porque no se confia en el mensaje y podria generar un error
+          numero_intento--;
+          server_send_message(args -> sockets_array[0], 20, message_1);
+          record_in_log(0, 20, message_1);
+          server_send_cards(args ->sockets_array[0], args->cards);
+          record_in_log(0, 9, args->cards);
+        }
+        
       }
       numero_intento++;
 
@@ -322,6 +331,9 @@ void *game_function(void *arguments) {
         //SEND WORD
         response = server_receive_payload(args->sockets_array[1]);
         record_in_log(1, 10, response);
+        if (DISCONNECTED == 1) {
+          break;
+        }
         if (strcmp(response, args->answer) == 0) {
           if (numero_intento == 1) {
             ROUND_SCORE_2 = 5;
@@ -360,13 +372,20 @@ void *game_function(void *arguments) {
         record_in_log(0, 17, message_1);
         server_send_message(args -> sockets_array[1], 17, message_1);
         record_in_log(0, 17, message_1);
+        DISCONNECTED = 1;
+        break;
       }
       else {
-        numero_intento--;
-        server_send_message(args -> sockets_array[1], 20, message_1);
-        record_in_log(0, 20, message_1);
-        server_send_cards(args ->sockets_array[1], args->cards);
-        record_in_log(0, 20, message_1);
+        if (DISCONNECTED == 0){
+          numero_intento--;
+          server_send_message(args -> sockets_array[1], 20, message_1);
+          record_in_log(0, 20, message_1);
+          server_send_cards(args ->sockets_array[1], args->cards);
+          record_in_log(0, 9, args->cards);
+  
+        }
+       
+        
       }
       numero_intento++;
 
@@ -594,6 +613,9 @@ int main(int argc, char *argv[]){
       //usleep(100);
     }
     printf("After Thread\n");
+    if (DISCONNECTED == 1) {
+      return 0;
+    }
     FINISHED_1 = 0;
     FINISHED_2 = 0;
 
