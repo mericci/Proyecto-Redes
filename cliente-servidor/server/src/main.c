@@ -43,7 +43,6 @@ void dobble(int sockets_array[2])
 }
 
 
-
 struct arg_struct {
     int client_socket;
     int sockets_array[2];
@@ -53,7 +52,6 @@ struct arg_struct {
     unsigned char * cards;
     char * answer;
 };
-
 
 
 void cards_log(FILE* fp, unsigned char * cards) {
@@ -234,7 +232,6 @@ void *game_function(void *arguments) {
 
   if (args->client_socket == args->sockets_array[0]) {
     //player1
-    //server_send_message(args->sockets_array[0], 7, message_1);
     message_2[0] = args->score_player1;
     message_2[1] = args->score_player2;
     server_send_message_2bytes(args->sockets_array[0], 8, message_2);
@@ -282,21 +279,30 @@ void *game_function(void *arguments) {
             record_in_log(0, 9, args->cards);
           }
         }
+        free(response);
       } 
       else if(id == 17){
-        server_receive_payload(args->sockets_array[0]);
+        free(server_receive_payload(args->sockets_array[0]));
         record_in_log(1, 17, message_1);
-        server_send_message(args -> sockets_array[0], 17, message_1);
-        record_in_log(0, 17, message_1);
-        server_send_message(args -> sockets_array[1], 17, message_1);
-        record_in_log(0, 17, message_1);
-        DISCONNECTED = 1;
+        if (DISCONNECTED == 0) {
+          message_1[0] = 2;
+          server_send_message(args->sockets_array[0], 14, message_1);
+          record_in_log(0, 14, message_1);
+          server_send_message(args->sockets_array[1], 14, message_1);
+          record_in_log(0, 14, message_1);
+          server_send_message(args -> sockets_array[0], 17, message_1);
+          record_in_log(0, 17, message_1);
+          server_send_message(args -> sockets_array[1], 17, message_1);
+          record_in_log(0, 17, message_1);
+          DISCONNECTED = 1;
+        }
+        
         break;
       }
       else
       {
         if (DISCONNECTED == 0) {
-          server_receive_payload(args->sockets_array[0]);
+          free(server_receive_payload(args->sockets_array[0]));
           //no se hace log porque no se confia en el mensaje y podria generar un error
           numero_intento--;
           server_send_message(args -> sockets_array[0], 20, message_1);
@@ -363,20 +369,30 @@ void *game_function(void *arguments) {
           }
           
         }
+        free(response);
       } 
       else if(id == 17)
       {
-        server_receive_payload(args->sockets_array[1]);
+        free(server_receive_payload(args->sockets_array[1]));
         record_in_log(1, 17, message_1);
-        server_send_message(args -> sockets_array[0], 17, message_1);
-        record_in_log(0, 17, message_1);
-        server_send_message(args -> sockets_array[1], 17, message_1);
-        record_in_log(0, 17, message_1);
-        DISCONNECTED = 1;
+        if (DISCONNECTED == 0) {
+          message_1[0] = 1;
+          server_send_message(args->sockets_array[0], 14, message_1);
+          record_in_log(0, 14, message_1);
+          server_send_message(args->sockets_array[1], 14, message_1);
+          record_in_log(0, 14, message_1);
+          server_send_message(args -> sockets_array[0], 17, message_1);
+          record_in_log(0, 17, message_1);
+          server_send_message(args -> sockets_array[1], 17, message_1);
+          record_in_log(0, 17, message_1);
+          DISCONNECTED = 1;
+        }
+        
         break;
       }
       else {
         if (DISCONNECTED == 0){
+          free(server_receive_payload(args->sockets_array[1]));
           numero_intento--;
           server_send_message(args -> sockets_array[1], 20, message_1);
           record_in_log(0, 20, message_1);
@@ -466,7 +482,7 @@ int main(int argc, char *argv[]){
   {
     msg_code1 = server_receive_id(players_info_1->socket_c1);
     if (msg_code1 == 1) {
-      server_receive_payload(players_info_1->socket_c1);
+      free(server_receive_payload(players_info_1->socket_c1));
       record_in_log(1, 1, empty_message);
       server_send_message(players_info_1->socket_c1, 2, empty_message);
       record_in_log(0, 2, empty_message);
@@ -475,7 +491,7 @@ int main(int argc, char *argv[]){
       break;
     }
     else{
-      server_receive_payload(players_info_1->socket_c1);
+      free(server_receive_payload(players_info_1->socket_c1));
       server_send_message(players_info_1->socket_c1, 20, empty_message);
       record_in_log(0, 20, empty_message);
       printf("Error en el cliente\n");
@@ -491,7 +507,7 @@ int main(int argc, char *argv[]){
       break;
     }
     else {
-      server_receive_payload(players_info_1->socket_c1);
+      free(server_receive_payload(players_info_1->socket_c1));
       server_send_message(players_info_1->socket_c1, 20, empty_message);
       record_in_log(0, 20, empty_message);
       printf("Error en el cliente\n");
@@ -507,7 +523,7 @@ int main(int argc, char *argv[]){
   {
     msg_code2 = server_receive_id(players_info_2->socket_c1);
     if (msg_code2 == 1) {
-      server_receive_payload(players_info_2->socket_c1);
+      free(server_receive_payload(players_info_2->socket_c1));
       record_in_log(1, 1, empty_message);
       server_send_message(players_info_2->socket_c1, 2, empty_message);
       record_in_log(0, 2, empty_message);
@@ -516,7 +532,7 @@ int main(int argc, char *argv[]){
       break;
     }
     else {
-      server_receive_payload(players_info_2->socket_c1);
+      free(server_receive_payload(players_info_2->socket_c1));
       server_send_message(players_info_2->socket_c1, 20, empty_message);
       record_in_log(0, 20, empty_message);
       printf("Error en el cliente\n");
@@ -532,7 +548,7 @@ int main(int argc, char *argv[]){
     break;
   }
   else {
-    server_receive_payload(players_info_2->socket_c1);
+    free(server_receive_payload(players_info_2->socket_c1));
     server_send_message(players_info_2->socket_c1, 20, empty_message);
     record_in_log(0, 20, empty_message);
     printf("Error en el cliente\n");
@@ -685,11 +701,12 @@ int main(int argc, char *argv[]){
           response_payload_1 = server_receive_payload(sockets_array[0]);
           record_in_log(1, 16, response_payload_1);
           response_1 = response_payload_1[0];
+          free(response_payload_1);
           break;
         }
         else
         {
-          server_receive_payload(sockets_array[0]);
+          free(server_receive_payload(sockets_array[0]));
           server_send_message(players_info_1->socket_c1, 20, empty_message);
           record_in_log(0, 20, empty_message);
           printf("Error en el cliente\n");
@@ -703,11 +720,12 @@ int main(int argc, char *argv[]){
           response_payload_2 = server_receive_payload(sockets_array[1]);
           record_in_log(1, 16, response_payload_2);
           response_2 = response_payload_2[0];
+          free(response_payload_2);
           break;
         }
         else
         {
-          server_receive_payload(sockets_array[1]);
+          free(server_receive_payload(sockets_array[1]));
           server_send_message(players_info_2->socket_c1, 20, empty_message);
           record_in_log(0, 20, empty_message);
           printf("Error en el cliente\n");
@@ -733,10 +751,20 @@ int main(int argc, char *argv[]){
 
 
     }
+    free(answer);
+    free(cards);
 
   }
 
   free(message_1);
+  free(players_info_1);
+  free(players_info_2);
+  free(NICK1);
+  free(NICK2);
+  for (int i = 0; i < 1001; i++) {
+    free(leidas[i]);
+  }
+  free(leidas);
 
   
 
