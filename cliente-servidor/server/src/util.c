@@ -86,17 +86,18 @@ unsigned char * crear_cartas(char** lectura){
         elegidas[i] = malloc(13 * sizeof(char));   
         i+=1;
     }
-    int* random_numbers = malloc(19 * sizeof(int));
-    random_numbers = random_function(1001, 19); 
+    //int* random_numbers = malloc(19 * sizeof(int));
+    int* random_numbers = random_function(1001, 19); 
 
     for (int i = 0; i < 19; i++)
     {
        strcpy(elegidas[i], lectura[random_numbers[i]]);
        //printf("elegida:  %s, %i\n", elegidas[i], i);
     }
+    
 
-    int* random_position = malloc(20 * sizeof(int));
-    random_position = random_function(20,20); 
+    //int* random_position = malloc(20 * sizeof(int));
+    int* random_position = random_function(20,20); 
 
     char ** definitivo_orden = malloc(20 * sizeof(char *));
     int z = 0;
@@ -144,7 +145,6 @@ unsigned char * crear_cartas(char** lectura){
 
             strcpy(definitivo_orden[random_position[i]], elegidas[chosen]);
             chosen +=1;
-            //printf("chosem:%s, pos: %i \n", elegidas[chosen], random_position[i]);
 
         }
     }
@@ -243,10 +243,22 @@ unsigned char * crear_cartas(char** lectura){
         
     }
 
-    
-    
-    
+    free(random_numbers);
+    for (int i = 0; i < 19; i++) {
+        free(elegidas[i]);
+    }
+    free(elegidas);
+    free(random_position);
 
+
+    for (int i = 0; i < 20; i++) {
+        free(definitivo_orden[i]);
+    }
+    free(definitivo_orden);
+    free(largo);
+    free(posiciones);
+
+    
     
     return respuesta;
 
@@ -278,19 +290,25 @@ char * correct_answer(unsigned char * cards) {
     for (int j = 0; j < 10; j++) {
         char * current_word_2 = words[10 + j];
         if (strcmp(current_word_1, current_word_2) == 0) {
-            answer = current_word_1;
-            printf("answer: %s\n", answer);
+            answer = malloc(sizeof(char) * words_length[i]);
+            for (int k = 0; k < words_length[i]; k++) {
+                answer[k] = current_word_1[k];
+                
+            }
+            printf("\nanswer: %s\n", answer);
+            printf("anwer length: %d\n", words_length[i]);
+            //FREE
+            for (int k = 0; k < 20; k++) {
+              free(words[k]);
+            }
+            free(words_length);
+            free(words_position);
+            free(words);
             return answer;
         }
     }
   }
-  //FREE
-  for (int i = 0; i < 20; i++) {
-    free(words[i]);
-  }
-  free(words_length);
-  free(words_position);
-  free(words);
+  
 
   return answer;
   

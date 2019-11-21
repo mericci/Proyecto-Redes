@@ -284,11 +284,14 @@ void *game_function(void *arguments) {
       else if(id == 17){
         free(server_receive_payload(args->sockets_array[0]));
         record_in_log(1, 17, message_1);
-        server_send_message(args -> sockets_array[0], 17, message_1);
-        record_in_log(0, 17, message_1);
-        server_send_message(args -> sockets_array[1], 17, message_1);
-        record_in_log(0, 17, message_1);
-        DISCONNECTED = 1;
+        if (DISCONNECTED == 0) {
+          server_send_message(args -> sockets_array[0], 17, message_1);
+          record_in_log(0, 17, message_1);
+          server_send_message(args -> sockets_array[1], 17, message_1);
+          record_in_log(0, 17, message_1);
+          DISCONNECTED = 1;
+        }
+        
         break;
       }
       else
@@ -367,11 +370,14 @@ void *game_function(void *arguments) {
       {
         free(server_receive_payload(args->sockets_array[1]));
         record_in_log(1, 17, message_1);
-        server_send_message(args -> sockets_array[0], 17, message_1);
-        record_in_log(0, 17, message_1);
-        server_send_message(args -> sockets_array[1], 17, message_1);
-        record_in_log(0, 17, message_1);
-        DISCONNECTED = 1;
+        if (DISCONNECTED == 0) {
+          server_send_message(args -> sockets_array[0], 17, message_1);
+          record_in_log(0, 17, message_1);
+          server_send_message(args -> sockets_array[1], 17, message_1);
+          record_in_log(0, 17, message_1);
+          DISCONNECTED = 1;
+        }
+        
         break;
       }
       else {
@@ -735,6 +741,8 @@ int main(int argc, char *argv[]){
 
 
     }
+    free(answer);
+    free(cards);
 
   }
 
@@ -743,6 +751,10 @@ int main(int argc, char *argv[]){
   free(players_info_2);
   free(NICK1);
   free(NICK2);
+  for (int i = 0; i < 1001; i++) {
+    free(leidas[i]);
+  }
+  free(leidas);
 
   
 
