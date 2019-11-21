@@ -283,18 +283,19 @@ char * correct_answer(unsigned char * cards) {
     words_position[i] = cards[current_position];
     current_position ++;
   }
-  char * answer;
+  //char * answer;
 
   for (int i = 0; i < 10; i++) {
     char * current_word_1 = words[i];
     for (int j = 0; j < 10; j++) {
         char * current_word_2 = words[10 + j];
         if (strcmp(current_word_1, current_word_2) == 0) {
-            answer = malloc(sizeof(char) * words_length[i]);
+            //answer = malloc(sizeof(char) * words_length[i]);
+            char* answer = calloc(words_length[i], sizeof(char));
             for (int k = 0; k < words_length[i]; k++) {
                 answer[k] = current_word_1[k];
-                
             }
+
             printf("\nanswer: %s\n", answer);
             printf("anwer length: %d\n", words_length[i]);
             //FREE
@@ -310,7 +311,10 @@ char * correct_answer(unsigned char * cards) {
   }
   
 
-  return answer;
+  return "NoHay";
   
 
 }
+
+
+

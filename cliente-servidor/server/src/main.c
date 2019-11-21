@@ -285,6 +285,11 @@ void *game_function(void *arguments) {
         free(server_receive_payload(args->sockets_array[0]));
         record_in_log(1, 17, message_1);
         if (DISCONNECTED == 0) {
+          message_1[0] = 2;
+          server_send_message(args->sockets_array[0], 14, message_1);
+          record_in_log(0, 14, message_1);
+          server_send_message(args->sockets_array[1], 14, message_1);
+          record_in_log(0, 14, message_1);
           server_send_message(args -> sockets_array[0], 17, message_1);
           record_in_log(0, 17, message_1);
           server_send_message(args -> sockets_array[1], 17, message_1);
@@ -371,6 +376,11 @@ void *game_function(void *arguments) {
         free(server_receive_payload(args->sockets_array[1]));
         record_in_log(1, 17, message_1);
         if (DISCONNECTED == 0) {
+          message_1[0] = 1;
+          server_send_message(args->sockets_array[0], 14, message_1);
+          record_in_log(0, 14, message_1);
+          server_send_message(args->sockets_array[1], 14, message_1);
+          record_in_log(0, 14, message_1);
           server_send_message(args -> sockets_array[0], 17, message_1);
           record_in_log(0, 17, message_1);
           server_send_message(args -> sockets_array[1], 17, message_1);
