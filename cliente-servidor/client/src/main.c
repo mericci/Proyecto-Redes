@@ -354,7 +354,7 @@ int main (int argc, char *argv[]){
       //client_send_message(server_socket, 20, empty_message);
       client_send_message(server_socket, 1, empty_message);
       record_in_log(0, 1, empty_message);
-      while(1) //while(play)
+      while(1)
       {         
         int msg_code = client_receive_id(server_socket);
         if (msg_code == 2) {
